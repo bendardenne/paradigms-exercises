@@ -7,7 +7,7 @@ Pas d'interpréteur pour le pseudocode du livre. Alternative ASM:
 
 Unif de Munich, date de 2006 (?). Installation simple, c'est un .jar. Une zone d'éditeur pour taper son code ASM, une vue de la RAM, une vue des registres.
 Une fenêtre de doc bien pratique avec les opérandes etc.
-Possibilité d'exécuter le code ligne par ligne voir le résultat de chaque opération.
+Possibilité d'exécuter le code ligne par ligne pour voir le résultat de chaque opération.
 Jeu d'instruction x86 simplifié 
 
 ###[BSim](http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-004-computation-structures-spring-2009/tools/)
@@ -57,3 +57,4 @@ Très facile de trouver des tutos.
 # Prolog
 
 [SWI](http://www.swi-prolog.org/)
+[Exerices](https://sites.google.com/site/prologsite/)
