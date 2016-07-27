@@ -1,4 +1,5 @@
-# Assembly
+# Assembly 
+(1 semaine)
 
 ## Interpreters
 Pas d'interpréteur pour le pseudocode du livre. Alternative ASM:
@@ -18,6 +19,7 @@ Aussi un .jar, un peu plus spartiate. Leur jeu d'instruction, moins complet, plu
 
 
 # Pascal
+(2 semaines)
     
 ## Interpreters
 
@@ -50,11 +52,21 @@ Très facile de trouver des tutos.
 
 
 # Scheme 
+(3 semaines)
 
 [Racket](https://racket-lang.org/)
 
+(Debian) Package "rlwrap" à installer manuellement (du moins pour le prompt CLI)
+
 
 # Prolog
+(3 semaines)
 
 [SWI](http://www.swi-prolog.org/)
+
 [Exerices](https://sites.google.com/site/prologsite/)
+
+# SmallTalk
+(3 semaines)
+
+Pharo
