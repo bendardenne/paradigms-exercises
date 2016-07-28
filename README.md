@@ -15,7 +15,9 @@ Jeu d'instruction x86 simplifié
 MIT (open courseware)                                                                                                                                                                                             
 Aussi un .jar, un peu plus spartiate. Leur jeu d'instruction, moins complet, plus orienté interaction ASM <-> machine (cours de computation structures).
 
+##Exercices:
 
+- Petits exos itératifs -> AbsMean
 
 
 # Pascal
@@ -52,21 +54,31 @@ Très facile de trouver des tutos.
 
 
 # Scheme 
-(3 semaines)
+(3 semaines + 1 mission)
 
 [Racket](https://racket-lang.org/)
 
 (Debian) Package "rlwrap" à installer manuellement (du moins pour le prompt CLI)
 
+## Mission
+
+Interpreteur/compilateur pseudo-code 
+
 
 # Prolog
-(3 semaines)
+(3 semaines + 1 mission)
 
 [SWI](http://www.swi-prolog.org/)
 
 [Exerices](https://sites.google.com/site/prologsite/)
 
+## Mission
+Extension DCG
+https://www.metalevel.at/lisprolog/lisprolog.pl
+
+
 # SmallTalk
-(3 semaines)
+(2 semaines)
 
 Pharo
+
