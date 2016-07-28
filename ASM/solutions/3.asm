@@ -2,7 +2,8 @@
 
 ; Sample Data
 ; dd  n,   item_1,  item_2, ...  item_n
-dd 15,    -12,  14,  65, -124, 57, 12, 13, -98, -41, 2, 10, 24, -30, 74, 146, 85
+dd 15,    -12,  14,  65, -124, 57, 12, 13, -98, -41, 2, 10, 24, -30, 74, 146
+;   (result = 48)
 
 ; Write a program that computes the average value of the absolute values
 ; of an array in memory.  
@@ -32,4 +33,5 @@ positive:   ADD EAX, EDX
 	LOOP avg
 	
 MOV ECX, [0x0]
-;DIV ECX
+MOV EDX, 0
+DIV ECX
