@@ -1,0 +1,33 @@
+\documentclass{../../tp}
+
+
+\title{Practical Session 2: Pascal}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Getting started}
+
+Download and install \textsf{FPC}, the \textsf{Free Pascal Compiler}\footnote{ \url{http://www.freepascal.org/download.var}}.\textsf{FPC} is a \textsf{Pascal} standalone command-line compiler. To compile a \textsf{Pascal} source, use: 
+
+\verb|$ fpc sourceCode.pas|
+
+which should generate a \verb|sourceCode.o| object file, as well as a \verb|sourceCode| executable binary.
+
+\subsection{Can't find unit error}
+
+If the compiler complains that it can't find a unit with an error message \verb|Fatal: Can't find unit unitName|, it probably means that your compiler is not configured to find the unit packages properly.
+
+The first solution for this is to avoid using units entirely. You should not need them for these practical sessions.
+
+If you really want to use units: locate the \verb|fpc.cfg| config file (on Linux, try \verb|~/.fpc.cfg|) and check that the path to your units installation is included. Typically, on a Linux system, you should have a line with :
+
+\verb| -Fu/usr/lib/fpc/$fpcversion/units/$fpctarget/*|
+
+
+\section{}
+
+\end{document}

@@ -1,26 +1,4 @@
-\documentclass[a4paper, 11pt]{article}
-
-\usepackage{color}
-\usepackage{fancybox}
-\usepackage{hyperref}
-
-
-
-\newenvironment{instruction}%
-{\vspace{15pt}
-	\noindent\begin{Sbox}
-		\begin{minipage}{\textwidth}}%
-		{\end{minipage}
-	\end{Sbox}	
-\shadowbox{\TheSbox} \vspace{10pt}}
-
-% Colors 
-\definecolor{asmblue}{RGB}{0,0,90}
-\definecolor{asmgreen}{RGB}{0,90,28}
-
-% Commands
-\newcommand{\asmop}[1]{{\sffamily \bfseries \color{asmblue} #1}}
-\newcommand{\asmreg}[1]{{\sffamily \bfseries \color{asmgreen} #1}}
+\documentclass{../../tp}
 
 
 \title{Practical Session 1: Assembly}
