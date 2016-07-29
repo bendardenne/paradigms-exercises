@@ -29,7 +29,7 @@ POP CX
 ADD EBX, 4
 
 ; Subtract the content of EBX
-; to the integer located at the adress contained in EAX
+; from the integer located at the adress contained in EAX
 SUB [EAX], EBX 
 
 ; Multiply EBX by 8.
@@ -38,7 +38,8 @@ IMUL EBX, 8
 ; Divide CX by 7. The quotient must be stored in ECX 
 ; and the remainder in EDX
 ; EAX must be unchanged at the end of the operation.
-; (hint: use the stack to restore EAX. Use an 8 bit register)
+; (hints: use the stack to restore EAX. 
+; Use an 8 bit register for the divider)
 
 PUSH AX		; Save AX on the stack
 

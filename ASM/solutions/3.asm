@@ -1,9 +1,9 @@
 ; 3. AbsMean
 
 ; Sample Data
-; dd  n,   item_1,  item_2, ...  item_n
-dd 15,    -12,  14,  65, -124, 57, 12, 13, -98, -41, 2, 10, 24, -30, 74, 146
-;   (result = 48)
+; DD  n,	item_1,  item_2, 	...  			item_n
+DD 15,	-12,  14,  65, -124, 57, 12, 13, -98, -41, 2, 10, 24, -30, 74, 146
+
 
 ; Write a program that computes the average value of the absolute values
 ; of an array in memory.  
@@ -23,15 +23,16 @@ dd 15,    -12,  14,  65, -124, 57, 12, 13, -98, -41, 2, 10, 24, -30, 74, 146
 MOV EBX, 0x4
 MOV ECX, [0x0]
 
-avg: 
-	MOV EDX, [EBX]
-	CMP EDX, 0
-	JGE positive 
-	NEG EDX
-positive:   ADD EAX, EDX
-	ADD EBX, 4
-	LOOP avg
+absmean: 
+	MOV EDX, [EBX]	; Get item from memory
+	CMP EDX, 0	
+	JGE positive 	; if negative
+	NEG EDX		; Change sign
+positive:   
+	ADD EAX, EDX	; Sum
+	ADD EBX, 4	; Next address
+	LOOP absmean
 	
-MOV ECX, [0x0]
-MOV EDX, 0
-DIV ECX
+MOV ECX, [0x0]		; Get n
+MOV EDX, 0		; DIV will operate on EDX:EAX
+DIV ECX			; Average

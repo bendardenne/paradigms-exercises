@@ -17,7 +17,7 @@ positive:
 
 ; Write a loop to generate a sequence of incrementing numbers 
 ; starting from 0, in every address from the address in EBX 
-; up to the address in ECX, not included (use 32-bit words).
+; up to the address in ECX (use 32-bit words).
 ; EAX and EBX must be unchanged after the operation.
 
 PUSH EBX
