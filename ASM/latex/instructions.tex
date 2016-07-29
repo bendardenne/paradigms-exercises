@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper, 11pt]{article}
 
 \usepackage{color}
 \usepackage{fancybox}
@@ -8,7 +8,7 @@
 
 \newenvironment{instruction}%
 {\vspace{15pt}
-	\begin{Sbox}
+	\noindent\begin{Sbox}
 		\begin{minipage}{\textwidth}}%
 		{\end{minipage}
 	\end{Sbox}	
@@ -93,7 +93,7 @@ The x86 instruction set provides facilities to use the stack. In \textsf{Jasmin}
 
 A simple \texttt{if} condition in x86 works in two steps : 
 \begin{enumerate}
-	\item First, compare two locations between them.
+	\item First, compare two items between them.
 	\item Second, jump to a location in the code based on the result of the comparison.
 \end{enumerate}
 
@@ -130,11 +130,11 @@ We will now combine elements of the previous sections to write a small program t
 
 \begin{instruction}
 
-Write a program that computes the average value of the absolute value of an array in memory.  
+Write a program that computes the mean of the absolute values of an array in memory.  
 We assume the memory contains :
 \begin{description}
-	\item[at \texttt{0x0}] $n$, a 32bit integer: the length of the array.
-	\item[from \texttt{0x4}:] the array of 32 bit integers.
+	\item[at \texttt{0x0}:] $n$, a 32-bit integer: the length of the array.
+	\item[from \texttt{0x4}:] the array of $n$ 32-bit signed integers.
 \end{description}
  	 
 The following instruction will write appropriate data in the memory of \textsf{Jasmin}, for an array of ten elements : \\
@@ -142,7 +142,7 @@ The following instruction will write appropriate data in the memory of \textsf{J
 \asmop{DD} \qquad \texttt{10, \quad	-12,  14,  65, -124, 57, 12, 13, -98, -41, 2} \\
  
 	  
-You can also directly edit the table on the right of the interface of \textsf{Jasmin} to manually change the example values.
+You can also directly edit the table in the right panel of the interface of \textsf{Jasmin} to manually change the example values.
 \end{instruction}
 
 
