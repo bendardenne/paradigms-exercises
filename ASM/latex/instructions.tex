@@ -1,0 +1,149 @@
+\documentclass[a4paper]{article}
+
+\usepackage{color}
+\usepackage{fancybox}
+\usepackage{hyperref}
+
+
+
+\newenvironment{instruction}%
+{\vspace{15pt}
+	\begin{Sbox}
+		\begin{minipage}{\textwidth}}%
+		{\end{minipage}
+	\end{Sbox}	
+\shadowbox{\TheSbox} \vspace{10pt}}
+
+% Colors 
+\definecolor{asmblue}{RGB}{0,0,90}
+\definecolor{asmgreen}{RGB}{0,90,28}
+
+% Commands
+\newcommand{\asmop}[1]{{\sffamily \bfseries \color{asmblue} #1}}
+\newcommand{\asmreg}[1]{{\sffamily \bfseries \color{asmgreen} #1}}
+
+
+\title{Practical Session 1: Assembly}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Getting started}
+
+Start by downloading and running \textsf{Jasmin-1.5.8.jar}. Some documentation on the interface, as well as the language accepted by Jasmin (a relatively large subset of the x86 instruction set) can be found online at: \url{http://wwwi10.lrr.in.tum.de/~jasmin/documentation.html}.
+
+
+\section{Using data}
+
+This section will introduce how to manipulate, store and read data in assembly.
+
+\subsection{Registers and Memory}
+
+In assembly, you have access to the CPU registers as well as the memory. The \asmop{MOV} instruction can be used to move data around. 
+
+\begin{instruction}
+Start by storing some numbers in the different registers. For instance:
+	\begin{enumerate}
+		\item Store the integer 4 in the 32-bit \asmreg{EAX} register
+		\item Store the integer 10 in the 32-bit \asmreg{EBX} register 
+		\item Store the integer 5 in the 16-bit \asmreg{CX} register
+		\item Store the integer 2 in the 8-bit \asmreg{DL} register
+	\end{enumerate}
+\end{instruction}
+
+
+Observe how each 16-bit register (e.g. \asmreg{AX}) can be extended to a 32-bit register (\asmreg{EAX}) or divided in two 8-bit registers for the high-order bits (\asmreg{AH}) and low-order bits (\asmreg{AL}). 
+
+You can use 32-bit registers as memory address pointers using brackets: [\asmreg{EAX}]. 
+
+\begin{instruction}
+	Try to store the integer 25 in the memory address contained in \asmreg{EAX} (i.e. \texttt{0x4}).
+\end{instruction}
+
+
+\subsection{The stack}
+
+The x86 instruction set provides facilities to use the stack. In \textsf{Jasmin} the stack is located at the end of the memory. 
+
+\begin{instruction}
+	Try to \asmop{PUSH} some data on the stack and \asmop{POP} it into the \asmreg{CX} register.
+\end{instruction}
+
+
+\section{Performing computations}
+
+
+\begin{instruction}
+	Write instructions to perform the following:
+	\begin{enumerate}
+		\item Add 4 to \asmreg{EBX}.
+		\item Subtract the content of \asmreg{EBX} from the integer located at the memory address stored in \asmreg{EAX} (e.g. 0x4)
+		\item Multiply \asmreg{EBX} by 8.
+		\item Divide \asmreg{CX} by 7. The quotient must be stored in \asmreg{ECX} and the remainder in \asmreg{EDX}.
+		\asmreg{EAX} must be unchanged at the end of the operation 
+		(\emph{hints}: use the stack to restore \asmreg{EAX} and use an 8 bit register for the divider).
+	\end{enumerate}
+\end{instruction}
+
+
+\section{Control Flow}
+
+A simple \texttt{if} condition in x86 works in two steps : 
+\begin{enumerate}
+	\item First, compare two locations between them.
+	\item Second, jump to a location in the code based on the result of the comparison.
+\end{enumerate}
+
+Look up the \asmop{CMP} instruction as well as the conditional jump instructions (\asmop{JE}, \asmop{JNE}, \asmop{JZ}, ...) in the documentation of \textsf{Jasmin} or any x86 documentation of your choice.
+
+\begin{instruction}
+	
+	Start by storing some example data we will use :\\
+	
+	{\ttfamily \asmop{MOV} [0xC], -35 \\}
+	
+	Write a condition checking that the integer in address \texttt{0xC} is negative. If it is, multiply it by three. Otherwise, do nothing (\emph{hint}: jump to a label to skip the multiplication if the number is positive.)
+
+\end{instruction}
+
+
+Writing a loop in assembly is not fundamentally different. To loop, you will simply jump to a label located before the conditional check.
+
+\begin{instruction}
+	
+	{\ttfamily \asmop{MOV} \asmreg{BX}, 0x20 \\
+		\asmop{MOV} \asmreg{CX}, 0x70 \\}	
+	
+Write a loop to generate a sequence of incrementing numbers 
+starting from 0, in every address from the address in \asmreg{EBX} 
+up to the address in \asmreg{ECX} (use 32-bit words).
+\asmreg{EAX} and \asmreg{EBX} must be unchanged after the operation.
+\end{instruction}
+
+
+\section{AbsMean}
+
+We will now combine elements of the previous sections to write a small program that actually performs some computations. 
+
+\begin{instruction}
+
+Write a program that computes the average value of the absolute value of an array in memory.  
+We assume the memory contains :
+\begin{description}
+	\item[at \texttt{0x0}] $n$, a 32bit integer: the length of the array.
+	\item[from \texttt{0x4}:] the array of 32 bit integers.
+\end{description}
+ 	 
+The following instruction will write appropriate data in the memory of \textsf{Jasmin}, for an array of ten elements : \\
+
+\asmop{DD} \qquad \texttt{10, \quad	-12,  14,  65, -124, 57, 12, 13, -98, -41, 2} \\
+ 
+	  
+You can also directly edit the table on the right of the interface of \textsf{Jasmin} to manually change the example values.
+\end{instruction}
+
+
+\end{document}

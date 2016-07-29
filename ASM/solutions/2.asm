@@ -6,7 +6,7 @@ MOV CX, 0x70
 
 ; Check that the integer in adress 0xC is stricly negative.
 ; If it is, multiply it by three, otherwise do nothing.
-; (Hint: jump to a label to skip the multiplication if the number is even.)
+; (Hint: jump to a label to skip the multiplication if the number is postive.)
 
 CMP [0xC], 0
 JGE positive 
