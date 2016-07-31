@@ -2,7 +2,7 @@
 
 ; Sample Data
 ; DD  n,	item_1,  item_2, 	...  			item_n
-DD 15,	-12,  14,  65, -124, 57, 12, 13, -98, -41, 2, 10, 24, -30, 74, 146
+DD 10,	-12,  14,  65, -124, 57, 12, 13, -98, -41, 2, 10
 
 
 ; Write a program that computes the average value of the absolute values

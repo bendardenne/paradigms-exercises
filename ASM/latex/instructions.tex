@@ -45,7 +45,7 @@ You can use 32-bit registers as memory address pointers using brackets: [\asmreg
 
 \subsection{The stack}
 
-The x86 instruction set provides facilities to use the stack. In \textsf{Jasmin} the stack is located at the end of the memory. 
+The x86 instruction set provides facilities to use the stack. In \textsf{Jasmin} the stack is located at the end of the memory: the stack pointer initially containes the address 0x1000, and this address is decremented by 2 (resp. 4) if you push a 16-bit (resp. 32-bit) operand. 
 
 \begin{instruction}
 	Try to \asmop{PUSH} some data on the stack and \asmop{POP} it into the \asmreg{CX} register.
@@ -121,7 +121,7 @@ The following instruction will write appropriate data in the memory of \textsf{J
 \asmop{DD} \qquad \texttt{10, \quad	-12,  14,  65, -124, 57, 12, 13, -98, -41, 2} \\
  
 	  
-You can also directly edit the table in the right panel of the interface of \textsf{Jasmin} to manually change the example values.
+You can also directly edit the table in the right panel of the interface of \textsf{Jasmin} to manually change the sample values. For the example above, you should obtain a mean absolute value of 43 (we use integer division to simply things)
 \end{instruction}
 
 
