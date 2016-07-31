@@ -3,4 +3,4 @@
 *.log
 *.out
 *synctex.gz
-
+_minted-instructions

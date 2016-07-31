@@ -6,11 +6,12 @@
 
 
 
-
+\usepackage{amsmath}
 \usepackage{color}
 \usepackage{fancybox}
 \usepackage{hyperref}
 \usepackage{indentfirst}
+\usepackage{minted}
 
 \newenvironment{instruction}%
 {\vspace{15pt}

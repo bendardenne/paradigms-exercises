@@ -17,17 +17,83 @@ Download and install \textsf{FPC}, the \textsf{Free Pascal Compiler}\footnote{ \
 
 which should generate a \verb|sourceCode.o| object file, as well as a \verb|sourceCode| executable binary.
 
-\subsection{Can't find unit error}
+\subsection{Error: Can't find unit}
 
 If the compiler complains that it can't find a unit with an error message \verb|Fatal: Can't find unit unitName|, it probably means that your compiler is not configured to find the unit packages properly.
 
 The first solution for this is to avoid using units entirely. You should not need them for these practical sessions.
 
-If you really want to use units: locate the \verb|fpc.cfg| config file (on Linux, try \verb|~/.fpc.cfg|) and check that the path to your units installation is included. Typically, on a Linux system, you should have a line with :
+If you really want to use units: locate the \verb|fpc.cfg| config file (on Linux, try \verb|.fpc.cfg| in your home directory) and check that the path to your units installation is included. Typically, on a Linux system, you should have a line with:
 
 \verb| -Fu/usr/lib/fpc/$fpcversion/units/$fpctarget/*|
 
+\subsection{Linker warning}
 
-\section{}
+The linker may give the error:
+
+\verb|warning: link.res contains output sections; did you forget -T?|
+
+It can be safely ignored. 
+
+\subsection{Using the compiler}
+
+\begin{instruction}
+	Try to compile and run the following \emph{Hello, World!} program.
+	
+	\begin{minted}{Pascal}
+	program HelloWorld;
+	begin 
+		writeln('Hello, World!');
+	end.
+	\end{minted}
+\end{instruction}
+
+\section{Imperative programs}
+
+\subsection{Procedures and conditionals}
+
+Pascal is a procedural programming language. 
+
+\begin{instruction}
+	Write a Pascal function which implements the following function $f$:
+		
+	\begin{equation*}
+		f(n) = 
+			\begin{cases}
+				n/2 & \text{if $n$ is even} \\
+				3n + 1 & \text{if $n$ is odd} 
+			\end{cases}
+	\end{equation*}
+\end{instruction}
+
+\subsection{Recursion}
+\begin{instruction}
+Write a program that queries the user for a number and checks the Collatz conjecture for this number.
+
+The Collatz conjecture states that for any starting number,  if we repeatedly apply the $f$ function defined above, we will eventually reach $1$. Use recursion to apply $f$ until reaching 1. 
+
+Your program should print every step of the convergence. Example of output, starting with $n = 13$: 
+\begin{verbatim}
+$ ./collatz
+Input a positive integer:
+13
+13 40 20 10 5 16 8 4 2 1
+\end{verbatim}
+\end{instruction}
+
+\subsection{Loops}
+\begin{instruction}
+Re-write your Collatz conjecture program to use a loop instead of a recursion.
+\end{instruction}
+
+
+\section{Data Types}
+
+Pascal provides nice features for user-defined data types. 
+
+
+\begin{instruction}
+	Write a program which defines a record for pupils with fields for name, form and year of entry. The data entry and display should take place in separate procedures.
+\end{instruction}
 
 \end{document}
