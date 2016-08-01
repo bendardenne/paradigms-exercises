@@ -1,0 +1,176 @@
+% Oplossingen Oefeningensessie 1: Familierelaties
+% ==============================
+
+% Vraag 1
+% -------
+
+father(prosper,maria).
+father(prosper,jef).
+father(prosper,francois).
+father(prosper,josephine).
+father(albert,tamara).
+father(albert,alexandra).
+father(albert,winnie).
+father(francois,bram).
+father(francois,inge).
+father(charel,frank).
+father(charel,willem).
+
+mother(eufrasie,maria).
+mother(eufrasie,jef).
+mother(eufrasie,francois).
+mother(eufrasie,josephine).
+mother(maria,tamara).
+mother(maria,alexandra).
+mother(maria,winnie).
+mother(anita,bram).
+mother(anita,inge).
+mother(josephine,frank).
+mother(josephine,willem).
+
+male(prosper).
+male(albert).
+male(francois).
+male(jef).
+male(charel).
+male(bram).
+male(frank).
+male(willem).
+
+female(eufrasie).
+female(maria).
+female(anita).
+female(josephine).
+female(tamara).
+female(alexandra).
+female(winnie).
+female(inge).
+
+% Vraag 2
+% -------
+
+%  Query om na te gaan of prosper de vader is van tamara
+%
+%   father(prosper,tamara).
+
+%  Query om na te gaan of anita de moeder is van bram
+%
+%   mother(anita,bram).
+
+%  Query om alle kinderen van jef te zoeken
+%
+%   father(jef,Child).
+
+%  Query om alle zoons (!) van francois te vinden
+%
+%   father(francois,Son),male(Son).
+
+%  Query om te controleren of maria en albert alleen samen kinderen hebben
+%
+%   findall(Childmaria,mother(maria,Childmaria),Childrenofmaria), 
+%   findall(Childalbert,father(albert,Childalbert),Childrenofalbert),
+%   Childrenofmaria=Childrenofalbert.
+
+%  Query om te controleren of je data consequent is, m.a.w. alle vaders
+%   moeten mannelijk zijn en alle moeders vrouwelijk
+%
+%   findall(F,father(F,C),Fathers),
+%   findall(Fm,(father(Fm,C),male(Fm)),Fathersmale),
+%   Fathers=Fathersmale,
+%   findall(M,mother(M,C),Mothers),
+%   findall(Mf,(mother(Mf,C),female(Mf)),Mothersfemale),
+%   Mothers=Mothersfemale.
+
+% Vraag 3
+% -------
+
+  parent(Parent,Child) :- father(Parent,Child).
+  parent(Parent,Child) :- mother(Parent,Child).
+
+% ofwel:
+
+  parent(Parent,Child) :-
+       father(Parent,Child);
+       mother(Parent,Child).
+
+son(Son,Parent) :- parent(Parent,Son), male(Son).
+
+daughter(Daughter,Parent) :- parent(Parent,Daughter), female(Daughter).
+
+grandfather(Grandfather,Grandchild) :- 
+     father(Grandfather,Parent),
+     parent(Parent,Grandchild).
+
+grandparent(Grandparent,Grandchild) :-
+	parent(Grandparent,Parent),
+	parent(Parent,Grandchild).
+ 
+brother(Brother,Sibling) :-	
+     male(Brother), father(Father,Brother),
+     father(Father,Sibling), mother(Mother,Brother),
+     mother(Mother,Sibling), not(Brother=Sibling).
+ 
+sibling(Sibling1,Sibling2) :-
+     father(Father,Sibling1), father(Father,Sibling2),
+     mother(Mother,Sibling1), mother(Mother,Sibling2),
+     not(Sibling1=Sibling2).
+
+havechildrentogether(Person1,Person2) :-
+     father(Person1,Child), mother(Person2,Child).
+havechildrentogether(Person1,Person2) :-
+     mother(Person1,Child), father(Person2,Child).
+
+uncle(Uncle,Person) :- brother(Uncle,Parent), parent(Parent,Person).
+
+% Vraag 4
+% -------
+
+% deel (a)
+	parent(josephine,_).
+
+% deel (b)
+%	Manier 1:	human(prosper).
+%				human(eufrasie).
+%				...
+%	Manier 2:	human(X).
+%
+%	Manier 3:	human(_).
+
+% deel (c)
+	isparent(Person) :- parent(Person,_).
+
+% Vraag 5
+% -------
+
+predecessor(X,Z) :- parent(X,Z).
+predecessor(X,Z) :- parent(X,Y), predecessor(Y,Z).
+
+% Vraag 6
+% -------
+
+% De bovenstaande oplossing (zie vraag 3) voldoet aan al de gevraagde 
+% voorwaarden.
+
+% Vraag 7
+% -------
+
+marriedcouple(eufrasie,prosper).
+marriedcouple(maria,albert).
+marriedcouple(anita,francois).
+marriedcouple(josephine,charel).
+
+motherinlaw(Motherinlaw,Soninlaw) :-
+     marriedcouple(Wife,Soninlaw),
+     mother(Motherinlaw,Wife).
+
+motherinlaw(Motherinlaw,Daughterinlaw) :-
+     marriedcouple(Daughterinlaw,Husband),
+     mother(Motherinlaw,Husband).
+
+brotherinlaw(Brotherinlaw,Siblinginlaw) :-
+     marriedcouple(Wife,Brotherinlaw),
+     sibling(Siblinginlaw,Wife).
+
+soninlaw(Soninlaw,Parentinlaw) :-
+     marriedcouple(Wife,Soninlaw),
+     parent(Parentinlaw,Wife).

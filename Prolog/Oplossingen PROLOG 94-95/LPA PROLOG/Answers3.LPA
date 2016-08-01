@@ -1,0 +1,170 @@
+% Oplossingen Oefeningensessie 3: Arithmetic
+% ==============================
+
+% Vraag 1
+% -------
+
+% Deel (a) : 
+
+natural(0).
+natural(s(X)) :- natural(X).
+
+% Deel (b) :
+
+smaller_or_equal(s(X),s(Y)) :- smaller_or_equal(X,Y).
+smaller_or_equal(0,X) :- natural(X).
+
+plus(0,Y,Y) :- natural(Y).
+plus(s(X),Y,s(Z)) :- plus(X,Y,Z).  
+
+times(0,Y,0) :- natural(Y).			
+times(s(X),Y,Z) :- times(X,Y,ZminY),plus(ZminY,Y,Z).
+
+exp(0,s(X),0) :- natural(X).			% 0 tot een strikt positieve macht is 0
+exp(X,0,s(0)) :- not(X=0),natural(X).	% een getal tot de macht 0 is 1
+										% maar 0 tot de macht 0 is ongedefinieerd
+exp(X,s(N),Z) :- exp(X,N,ZdivX),times(X,ZdivX,Z).
+
+factorial(0,s(0)).
+factorial(s(X),F) :- factorial(X,Fprev),times(Fprev,s(X),F).
+
+minimum(N1,N2,N1) :- smaller_or_equal(N1,N2).
+minimum(N1,N2,N2) :- smaller_or_equal(N2,N1).
+
+% Vraag 2
+% -------
+
+% Deel (a) :
+
+even(0).
+even(s(s(X))) :- natural(X), even(X).
+
+odd(s(0)).
+odd(s(s(X))) :- natural(X), odd(X).
+
+% Deel (b) :
+
+ackermann(0,N,s(N)).
+ackermann(s(M),0,Val) :- ackermann(M,s(0),Val).
+ackermann(s(M),s(N),Val) :- ackermann(s(M),N,Val1), ackermann(M,Val1,Val).
+
+% Deel (c) :
+
+div(X,Y,0) :- smaller_or_equal(X,Y).                % XdivY = 0 als X<Y
+div(X,Y,s(N)) :- div(XminY,Y,N), plus(XminY,Y,X).   % XdivY = 1 + (X-Y)divY
+
+% Vraag 3
+% -------
+
+% Deel (a):
+
+mylength([],0).
+mylength([X|Xs],s(N)) :- mylength(Xs,N).
+
+% Deel (b):
+
+maximum([X],X).
+maximum([X|Xs],M) :- maximum(Xs,M), smaller_or_equal(X,M).
+maximum([X|Xs],X) :- maximum(Xs,M), smaller_or_equal(M,X).
+
+% Deel (c):
+
+ordered([X]).
+ordered([X,Y|Ys]) :- smaller_or_equal(X,Y), ordered([Y|Ys]).
+
+% Vraag 4
+% -------
+
+plusnew(X,Y,Z) :- Z is X + Y.
+
+% Deel (a):
+
+%	plus(s(s(0)),s(s(s(s(s(0))))),X)
+% is effici‘nter dan
+%	plus(s(s(s(s(s(0))))),s(s(0)),X)
+% omdat de recursie gebeurt door telkens van het eerste argument 1 af te trekken
+% tot we aan nul komen. M.a.w. snelheid is lineair in het eerste argument.
+
+%	plusnew(2,5,X)
+% is het effici‘ntst omdat ze vertaald wordt naar een call in de onderliggende 
+% machinetaal. M.a.w. snelheid is van constante orde.
+
+% Deel (b):
+
+% Door de query te TRACEN (doe dit!) is het gemakkelijk na te gaan dat
+%	plus(s(s(s(0))),X,s(s(s(s(s(0))))))
+% het volgende resultaat heeft:
+% X =  s(s(0))
+
+%	plusnew(3,X,8)
+% daarentegen is per definitie equivalent met
+% 	8 is 3 + X
+% hetgeen niet toegelaten is omdat 3 + X niet reduceert tot een waarde aangezien
+% het nog een vrije variabele X bevat.
+
+% Deel (c):
+
+power(0,X,0) :- X > 0.				% 0 tot een strikt positieve macht is 0
+power(X,0,1) :- X > 0.				% Een strikt positief getal tot de macht 0
+									% is 1
+									% 0 tot de macht 0 is ongedefinieerd.	
+power(X,N,Z) :- power(X,M,ZdivX), N is M + 1, Z is X * ZdivX.
+
+% Gebruik: power(getal,getal,variabele)
+%          power(getal,variabele,getal)
+% maar niet: power(variabele,getal,getal)
+
+% Vraag 5
+% -------
+
+% Deel (a):
+
+% Een eerste iteratieve versie van factorial:
+
+factorialiter1(N,F) :- iter1(0,N,1,F).
+iter1(I,N,T,F) :- I < N, I1 is I + 1, T1 is T * I1, iter1(I1,N,T1,F).
+iter1(N,N,F,F).
+
+% Een tweede iteratieve versie van factorial:
+
+factorialiter2(N,F) :- iter2(N,1,F).
+iter2(N,T,F) :- N > 0, T1 is T * N, N1 is N - 1, iter2(N1,T1,F).
+iter2(0,F,F).
+
+% Deel (b):
+
+mylength2([X|Xs],N) :- mylength2(Xs,N1), N is N1 + 1.
+mylength2([],0).
+
+maximum2([X|Xs],M) :- maximum2(Xs,X,M).
+maximum2([X|Xs],Y,M) :- X =< Y, maximum2(Xs,Y,M).
+maximum2([X|Xs],Y,M) :- X > Y, maximum2(Xs,X,M).
+maximum2([],M,M).
+
+% Deel (c):
+
+poweriter(X,N,Z) :-iter(X,0,1,N,Z).
+iter(X,N,Z,N,Z) :- N>0.
+iter(X,0,1,0,1) :- not(X is 0).
+iter(X,M1,Y1,N,Z) :- M1<N, M2 is M1+1, Y2 is Y1*X, iter(X,M2,Y2,N,Z). 
+
+% Vraag 6
+% -------
+
+% Deel (a): eerste versie
+
+fib1(0,1).
+fib1(1,1).
+fib1(N,F) :- Nmin1 is N-1, fib1(Nmin1,F1), Nmin2 is N-2, 
+			fib1(Nmin2,F2), F is F1+F2.
+
+% Deel (b): gememo•zeerde versie
+
+fib2(0,1).
+fib2(1,1).
+fib2(N,F) :- Nmin1 is N-1, fib2(Nmin1,F1), Nmin2 is N-2, 
+			fib2(Nmin2,F2), F is F1+F2.
+
+% Deel (c):
+% 	de snelheid van fib1 is exponentieel in N
+%   de snelheid van fib2 is lineair in N

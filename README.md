@@ -11,10 +11,6 @@ Une fenêtre de doc bien pratique avec les opérandes etc.
 Possibilité d'exécuter le code ligne par ligne pour voir le résultat de chaque opération.
 Jeu d'instruction x86 simplifié 
 
-###[BSim](http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-004-computation-structures-spring-2009/tools/)
-MIT (open courseware)                                                                                                                                                                                             
-Aussi un .jar, un peu plus spartiate. Leur jeu d'instruction, moins complet, plus orienté interaction ASM <-> machine (cours de computation structures).
-
 ##Exercices:
 
 - Petits exos itératifs -> AbsMean
@@ -24,10 +20,6 @@ Aussi un .jar, un peu plus spartiate. Leur jeu d'instruction, moins complet, plu
 (2 semaines)
     
 ## Interpreters
-
-###[Lazarus](http://www.lazarus-ide.org/)
-
-Lourd (beaucoup de dépendances), complexe, intimidant. Beaucoup de fonctionnalités unutiles, mais un éditeur avec syntax hilighting etc.
 
 ###[Free Pascal Compiler](http://www.freepascal.org/)
 Plus léger et plus simple d'utilisation, mais c'est juste le compilateur, pas d'éditeur, ni de GUI. 
@@ -60,6 +52,14 @@ Très facile de trouver des tutos.
 
 (Debian) Package "rlwrap" à installer manuellement (du moins pour le prompt CLI)
 
+
+## Exos
+
+1 Semaine Liste
+1 Semaine Lambdas
+
+set-car!/set-cdr!  SICP sec 3.3.1
+
 ## Mission
 
 Interpreteur/compilateur pseudo-code 
@@ -71,6 +71,14 @@ Interpreteur/compilateur pseudo-code
 [SWI](http://www.swi-prolog.org/)
 
 [Exerices](https://sites.google.com/site/prologsite/)
+
+## Exos LPA
+
+Sessions 1 & 2: en un TP (Sauf difference-lists)
+Session 3: moins importante, introduire prédicat is
+Session 4: cuts, importante
+Session 6: eight queens
+Session 5: DCG, bonne intro pour la mission
 
 ## Mission
 Extension DCG

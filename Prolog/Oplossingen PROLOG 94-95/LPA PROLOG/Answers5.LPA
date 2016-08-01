@@ -1,0 +1,313 @@
+% Oplossingen Oefeningensessie 5: Parsing with Definite Clause Grammars
+% ==============================
+
+% SYNTAX OF OUR EXAMPLE LANGUAGE
+% ------------------------------
+%
+% Expr ::=	"@"									(argument object)
+% 		|	Id "(" Expr ")"						(self call)	
+%	 	|	"^" "(" Expr ")"					(super call)
+% 		|	"(" Expr ")" Id "(" Expr ")"		(message send)
+%	 	|	"{" Expr "+" Expr "}"				(composition)
+%	 	|	"[" Expr "]" "(" Id ")"				(encapsulation)
+%	 	|	"\" Id "=" Expr						(method define)
+%		|	Number								(predefined objects)
+%	 	|	"_"									(empty object)
+%
+% Letter ::= "a" | ... | "z" | "A" | ... | "Z"
+%
+% Digit ::= "0" | ... | "9"
+%
+% Id ::=	Letter 								(identifier)
+%		|	Letter Id
+%
+% Number ::=	Digit
+%		|	Digit Number
+
+% Vraag 1: Strings
+% -------
+
+% Deel (a): implementatie van flatten
+
+flatten([],[]).
+flatten([H],H).
+flatten([H|T],L) :- append(H,LT,L), flatten(T,LT).
+
+% Merk op dat het hier belangrijk is dat de append eerst staat omdat we de 
+% flatten zullen gebruiken om uit een ingevulde L, een aantal mogelijke
+% suggesties voor H en T te doen. Als we de append niet eerst zetten, komen
+% we bij een dergelijk gebruik in een oneindige lus. Bijvoorbeeld de query
+% flatten(X,[1,2,3]) geeft eerst alle juiste mogelijkheden voor X maar komt
+% dan onvermijdelijk in een oneindige lus.
+
+% Deel (b):
+
+% flatten(["(","Hallo",")"],E), name(E2,E)
+% => E = [40, 72, 97, 108, 108, 111, 41],  E2 = '(Hallo)'
+
+% Deel (c):
+
+letter(E) :- 97 =< E, E =< 122.	% letter tussen "a" en "z"
+letter(E) :- 65 =< E, E =< 90.	% letter tussen "A" en "Z"
+
+identifier([E]) :- letter(E).
+identifier([H|T]) :- letter(H), identifier(T).
+
+% Vraag 2:	A simple parser
+% -------
+
+expression(E) :- 	argument(E);
+					selfcall(E);
+					supercall(E);
+					messagesend(E);
+					composition(E);
+					encapsulation(E);
+					method(E);
+					predefined(E);
+					empty(E).
+
+argument("@").	
+
+selfcall(E) :- flatten([N,"(",E1,")"],E), identifier(N), expression(E1).
+
+% Merk op dat het ook hier (en natuurlijk ook bij de volgende regels) uiterst 
+% belangrijk is dat de flatten vooraan staat. We willen immers uit een
+% ingevulde E een aantal suggesties doen voor N en E1. Als de flatten niet
+% eerst staat zijn deze suggesties totaal niet op E gebaseerd, en is de kans
+% dat een juiste gevonden wordt bijna nihil.
+
+supercall(E) :- flatten(["^","(",E1,")"],E), expression(E1).
+
+messagesend(E) :- flatten(["(",E1,")",N,"(",E2,")"],E), expression(E1),identifier(N),expression(E2).
+
+composition(E) :- flatten(["{",E1,"+",E2,"}"],E), expression(E1), expression(E2).
+
+encapsulation(E) :- flatten(["[",E1,"]","(",N,")"],E), expression(E1), identifier(N).
+
+method(E) :- flatten(["\",N,"=",E1],E), expression(E1), identifier(N).
+
+predefined(E) :- numeral(E).
+
+empty("_").
+
+digit(E) :- 48 =< E, E =< 57.	% getal tussen "0" en "9"
+
+numeral([E]) :- digit(E).
+numeral([H|T]) :- digit(H), numeral(T).
+
+% VOORBEELDEN: (de laatste 2 kunnen wel een poosje duren)
+% expression("\a=@")	=>	Yes
+% expression("(\telop={(@)x(_)+(@)y(_)})telop({\x=5+\y=6})")	=> Yes
+% expression("(\telop={(@)x+(@)y(_)})telop({\x=5+\y=6})")		=> No
+
+% Vraag 3:	A simple efficient parser
+% --------
+
+expression2(E) :- expression2(E,[]).	
+% Kan E geparst worden als geldige expressie met lege restlijst?
+
+expression2(E,R) :- argument2(E,R);
+					selfcall2(E,R);
+					supercall2(E,R);
+					messagesend2(E,R);
+					composition2(E,R);
+					encapsulation2(E,R);
+					method2(E,R);
+					predefined2(E,R);
+					empty2(E,R).
+
+argument2([64|R],R).	% 64 is de ascii-code van '@'
+
+selfcall2(E,R) :-	identifier2(E,R1), leftpar2(R1,R2), expression2(R2,R3), 
+					rightpar2(R3,R).
+leftpar2([40|R],R).		% 40 is de ascii-code van '('
+rightpar2([41|R],R).	% 40 is de ascii-code van ')'
+
+supercall2(E,R) :-	super2(E,R1), leftpar2(R1,R2), expression2(R2,R3), 
+					rightpar2(R3,R).
+super2([94|R],R).		% 94 is de ascii-code van '^'
+					
+messagesend2(E,R) :-	leftpar2(E,R1), expression2(R1,R2), rightpar2(R2,R3),
+						identifier2(R3,R4), leftpar2(R4,R5), expression2(R5,R6),
+						rightpar2(R6,R).
+
+composition2(E,R) :-	leftacco2(E,R1), expression2(R1,R2), plus2(R2,R3),
+						expression2(R3,R4), rightacco2(R4,R).
+leftacco2([123|R],R).	% 123 is de ascii-code van '{'
+rightacco2([125|R],R).	% 125 is de ascii-code van '}'
+plus2([43,R],R).		% 43 is de ascii-code van '+'
+
+encapsulation2(E,R) :-	leftbrack2(E,R1), expression2(R1,R2), rightbrack2(R2,R3),
+						leftpar2(R3,R4), identifier2(R4,R5), rightpar2(R5,R).
+leftbrack2([91|R],R).	% 91 is de ascii-code van '['
+rightbrack2([93|R],R). 	% 93 is de ascii-code van ']'
+
+method2(E,R) :-	lambda2(E,R1), identifier2(R1,R2), equality2(R2,R3),
+				expression2(R3,R).
+lambda2([92|R],R).		% 92 is de ascii-code van '\'
+equality2([61|R],R).	% 61 is de ascii-code van '='
+
+predefined2(E,R) :- numeral2(E,R).
+
+empty2([95|R],R).		% 95 is de ascii-code van '_'
+
+identifier2([E|R],R) :- letter(E).
+identifier2([H|TR],R) :- letter(H), identifier2(TR,R).
+
+% letter(E) :- ...		zie vorige vraag
+
+numeral2([E|R],R) :- digit(E).
+numeral2([H|TR]) :- digit(H), numeral2(TR,R).
+
+% digit(E) :- ...		zie vorige vraag
+
+% VOORBEELDEN: (de laatste 2 kunnen wel een poosje duren)
+% expression2("\a=@")	=>	Yes
+% expression2("(\telop={(@)x(_)+(@)y(_)})telop({\x=5+\y=6})")	=> Yes
+% expression2("(\telop={(@)x+(@)y(_)})telop({\x=5+\y=6})")		=> No
+
+% Vraag 4:	A DCG-parser
+% --------
+
+parse(E) :- phrase(expression3,E).
+
+expression3 --> argument3;
+				selfcall3;
+				supercall3;
+				messagesend3;
+				composition3;
+				encapsulation3;
+				method3;
+				predefined3;
+				empty3.
+
+argument3 --> "@".
+
+selfcall3 -->	identifier3, leftpar3, expression3,	rightpar3.
+leftpar3 --> "(".
+rightpar3 --> ")".
+
+supercall3 -->	super3, leftpar3, expression3, rightpar3.
+super3 --> "^".
+					
+messagesend3 -->	leftpar3, expression3, rightpar3, identifier3, leftpar3,
+					expression3, rightpar3.
+
+composition3 -->	leftacco3, expression3, plus3, expression3, rightacco3.
+leftacco3 --> "{".
+rightacco3 --> "}".
+plus3 --> "+".
+
+encapsulation3 -->	leftbrack3, expression3, rightbrack3, leftpar3, identifier3,
+					 rightpar3.
+leftbrack3 --> "[".
+rightbrack3 --> "]".
+
+method3 -->	lambda3, identifier3, equality3, expression3.
+lambda3 --> "\".
+equality3 --> "=".
+
+predefined3 --> numeral3.
+
+empty3 --> "_".
+
+% De volgende zijn identiek hetzelfde als in de vorige oefening. (Ze staan in
+% commentaar omdat we in de volgende oefening een geoptimiseerde versie
+% voorstellen.)
+%
+% identifier3([E|R],R) :- letter(E).
+% identifier3([H|TR],R) :- letter(H), identifier3(TR,R).
+%
+% letter(E) :- ...		zie vorige vraag
+%
+% numeral3([E|R],R) :- digit(E).
+% numeral3([H|TR]) :- digit(H), numeral3(TR,R).
+%
+% digit(E) :- ...		zie vorige vraag
+
+% VOORBEELDEN: (de laatste 2 kunnen wel een poosje duren)
+% parse("\a=@")	=>	Yes
+% parse("(\telop={(@)x(_)+(@)y(_)})telop({\x=5+\y=6})")	=> Yes
+% parse("(\telop={(@)x+(@)y(_)})telop({\x=5+\y=6})")		=> No
+
+% Vraag 5:	Some optimisations
+% --------
+
+% Deel a:
+
+identifier3([E,RH|RT],[RH|RT]) :- letter(E), not letter(RH).
+identifier3([RH|RT],R) :- letter(RH), identifier3(RT,R).
+
+numeral3([E,RH|RT],[RH|RT]) :- digit(E), not digit(RH).
+numeral3([RH|RT],R) :- digit(RH), numeral3(RT,R).
+
+% Deel b:
+
+parse(E,P) :- phrase(expression4(P),E).
+% de parameter P staat voor de parse-tree die zal worden gegenereerd.
+
+expression4(expression(P)) -->	argument4(P);
+								selfcall4(P);
+								supercall4(P);
+								messagesend4(P);
+								composition4(P);
+								encapsulation4(P);
+								method4(P);
+								predefined4(P);
+								empty4(P).
+
+argument4(argument) --> "@".
+
+selfcall4(selfcall(P1,P2)) -->	identifier4(P1), leftpar4, expression4(P2), 
+								rightpar4.
+leftpar4 --> "(".
+rightpar4 --> ")".
+
+supercall4(supercall(P)) --> super4, leftpar4, expression4(P), rightpar4.
+super4 --> "^".
+					
+messagesend4(messagesend(P1,P2,P3)) -->	leftpar4, expression4(P1), rightpar4, 
+										identifier4(P2), leftpar4, 
+										expression4(P3), rightpar4.
+
+composition4(composition(P1,P2)) -->	leftacco4, expression4(P1), plus4,
+										expression4(P2), rightacco4.
+leftacco4 --> "{".
+rightacco4 --> "}".
+plus4 --> "+".
+
+encapsulation4(encapsulation(P1,P2)) -->	leftbrack4, expression4(P1), 
+											rightbrack4, leftpar4,
+											identifier4(P2), rightpar4.
+leftbrack4 --> "[".
+rightbrack4 --> "]".
+
+method4(method(P1,P2)) --> lambda4, identifier4(P1), equality4, expression4(P2).
+lambda4 --> "\".
+equality4 --> "=".
+
+predefined4(predefined(P)) --> numeral4(P).
+
+empty4(empty) --> "_".
+
+identifier4(identifier,[E,RH|RT],[RH|RT]) :- letter(E), not letter(RH).
+identifier4(P,[RH|RT],R) :- letter(RH), identifier4(P,RT,R).
+
+numeral4(numeral,[E,RH|RT],[RH|RT]) :- digit(E), not digit(RH).
+numeral4(P,[RH|RT],R) :- digit(RH), numeral4(P,RT,R).
+
+% VOORBEELDEN:
+% parse("\a=@",P)	
+%	=>	P = expression(method(identifier, expression(argument)))
+% parse("(\telop={(@)x(_)+(@)y(_)})telop({\x=5+\y=6})",P)	
+%	=> P = expression(messagesend(expression(method(identifier, 
+%	expression(composition(expression(messagesend(expression(argument),
+%	identifier, expression(empty))), expression(messagesend(expression(argument),
+%	identifier, expression(empty))))))), identifier, 
+%	expression(composition(expression(method(identifier, 
+%	expression(predefined(numeral)))), expression(method(identifier, 
+%	expression(predefined(numeral))))))))
+% parse("(\telop={(@)x+(@)y(_)})telop({\x=5+\y=6})",P)		
+%	=> no
+
+

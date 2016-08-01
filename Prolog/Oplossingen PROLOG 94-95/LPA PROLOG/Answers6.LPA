@@ -1,0 +1,208 @@
+% Oplossingen Oefeningensessie 6: Search Problems
+% ==============================
+
+% Enkele voorafgaande definities:
+
+member(X,[X|L]) :- !.
+member(X,[Y|L]) :- member(X,L).
+
+% Vraag 1
+% -------
+
+% Deel (a) : 
+
+% Het onderscheid tussen blokjes en plaatsen wordt gemaakt m.b.v. de predicaten
+% place en block.
+
+block(a).
+block(b).
+block(c).
+place(p).
+place(q).
+place(r).
+
+% De POSITIE van een blokje zullen we aangeven d.m.v. een functor "on" op welke
+% plaats of op welk blokje het betreffende blokje zich bevindt. Bvb.
+% on(q,a) -> blokje a bevindt zich als enige blokje op de stapel q
+% on(c,b) -> blokje c bevindt zich bovenop blokje b
+
+% Configuratie = lijst van posities van blokjes. Bvb.
+% BeginState -> [on(a,b),on(b,p),on(c,r)]
+% FinalState -> [on(a,b),on(b,c),on(c,r)]
+
+% Een VERPLAATSING van een blokje wordt ofwel aangegeven door een functor
+% "move_to_place" indien het blokje naar een lege stapel wordt verplaatst, en
+% door "move_to_block" indien het bovenop een ander blokje wordt gezet. Bvb.
+% move_to_place(a,b,q) -> verplaats blokje a van b naar de lege stapel q
+% move_to_block(b,p,c) -> verplaats blokje b van p naar bovenop blokje c
+
+% Plan = lijst van verplaatsingen van blokjes. Bvb.
+% Plan -> [move_to_place(a,b,q),move_to_block(b,p,c),move_to_block(a,q,b)]
+
+% Deel (b) :
+
+transform(Begin,Final,Plan) :- transform(Begin,Final,[Begin],Plan).
+
+transform(State,Final,Visited,[Action|Plan])
+	:- legal_action(Action,State), 
+		update(State,Action,NewState),
+		not member(NewState,Visited), 
+		transform(NewState,Final,[NewState|Visited],Plan).
+		
+transform(Final,Final,_,[]).
+
+% Deel (c) :
+
+update(State,move_to_place(B,PorB,P),NewState) 
+	:- substitute(on(B,PorB),on(B,P),State,NewState).
+	
+update(State,move_to_block(B1,PorB,B2),NewState)
+	:- substitute(on(B1,PorB),on(B1,B2),State,NewState).
+
+substitute(X,Y,[X|L1],[Y|L2]) :- substitute(X,Y,L1,L2).
+substitute(X,Y,[Z|L1],[Z|L2]) :- not(X=Z),substitute(X,Y,L1,L2).
+substitute(X,Y,[],[]).
+
+% Deel (d) :
+
+legal_action(move_to_place(B,PorB,P),State)
+	:- place(P), is_on(B,PorB,State), 
+		isclear(B,State), isclear(P,State).
+	
+legal_action(move_to_block(B1,PorB,B2),State)
+	:- block(B2), is_on(B1,PorB,State), not B1=B2,
+		isclear(B1,State), isclear(B2,State).
+% B1 moet verschillen van B2 omdat er anders niets wordt verplaatst.
+% Let op! not B1=B2 moet pas uitgevoerd worden als B1 en B2 al gebonden zijn!
+% Zoniet dan wordt de enen unificatie gelijkgesteld aan de andere, en is B1=B2
+% dus true, en bijgevolg de negatie steeds false!
+
+isclear(PorB,State) :- not member(on(_,PorB),State).
+
+is_on(B,PorB,State) :- block(B), member(on(B,PorB),State).
+
+% Deel (e) :
+
+% Bijvoorbeeld:
+
+% transform([on(a, b), on(b, p), on(c, r)], 
+%			[on(a, b), on(b, c), on(c, r)], 
+%			Plan)
+% => % Plan = 
+%	[move_to_place(a, b, q), move_to_block(b, p, a), move_to_place(c, r, p), 
+%	 move_to_place(b, a, r), move_to_block(c, p, a), move_to_place(b, r, p), 
+%	 move_to_block(c, a, b), move_to_place(a, q, r), move_to_place(c, b, q),
+%	 move_to_block(b, p, a), move_to_place(c, q, p), move_to_place(b, a, q),
+%	 move_to_block(c, p, a), move_to_block(c, a, b), move_to_place(a, r, p), 
+%	 move_to_place(c, b, r), move_to_block(b, q, a), move_to_block(b, a, c), 
+%	 move_to_place(a, p, q), move_to_block(a, q, b)]
+
+% transform([on(a,b),on(b,p),on(c,r)],
+%			[on(a,b),on(b,c),on(c,r)],
+%			[move_to_place(a,b,q),move_to_block(b,p,c),move_to_block(a,q,b)]).
+% => Yes.
+
+% Vraag 2
+% -------
+
+choose_action(State,Action,FinalState) :-
+	suggest(Action,FinalState), legal_action(Action,State).
+choose_action(State,Action,FinalState) :-
+	legal_action(Action,State).
+
+suggest(to_place(X,Y,Z),FinalState) :-
+	member(on(X,Z),FinalState), place(Z).
+suggest(to_block(X,Y,Z),FinalState) :-
+	member(on(X,Z),FinalState), block(Z).
+	
+% Bodendien moet het predicaat transform als volgt aangepast worden:
+% transform(State,Final,Visited,[Action|Plan])
+%	:- choose_action(State,Action,Final), 
+%		update(State,Action,NewState),
+%		not member(NewState,Visited), 
+%		transform(NewState,Final,[NewState|Visited],Plan).
+
+% Vraag 3
+% -------
+
+% I.p.v. het 8-queens probleem op te lossen zullen we onmiddellijk in het
+% algemeen het N-queens probleem oplossen.
+
+% Deel (a) : Data-representatie
+
+% We stellen een oplossing van het N-queens probleem voor als een permutatie
+% van de lijst van getallen [1,2,...,N]. Bijvoorbeeld voor N=4 hebben we o.a.
+% als oplossing [2,4,3,1]. De positie in de lijst stelt het rangnummer van de
+% rij op het schaakbord voor, en het getal op die positie in de
+% lijst stelt het rangnummer van de kolom op het schaakbord voor.
+
+% Voordeel van deze representatie:
+% 1) Geen 2 coordinaten per koningin nodig.
+% 2) Een heleboel triviale oplossing worden dankzij de representatie al 
+%    automatisch uitgesloten, bijvoorbeeld:
+%		- 2 koninginnen op dezelfde kolom kan niet (een lijst kan geen 2
+%		  verschillende elementen op dezelfde positie hebben)
+%       - 2 koninginnen op dezelfde rij kan niet (omdat we een permutatie 
+%		  nemen van de getallen van 1 tot en met N, dus 2 gelijke getallen
+%		  komen hier niet in voor)
+%	 => Het enige dat we nog moeten nagaan is of 2 koninginnen zich niet op
+%       eenzelfde diagonaal bevinden. Hoe kunnen we dit doen in deze
+%       representatie?
+
+% Deel (b) :
+
+% safe(Qs) test of een bepaalde configuratie van koninginnen "veilig" is
+safe([]).
+safe([Q|Qs]) :- safe(Qs), not attack(Q,Qs).
+
+% attack(Q,Qs) test of de koningin Q een der koninginnen uit Qs aanvalt.
+attack(Q,Qs) :- attack(Q,1,Qs).
+
+% attack(Q,N,Qs) test of de koningin Q een der koninginnen uit Qs aanvalt. Het
+% getal N stelt de horizontale afstand (het aantal kolommen) voor van Q tot de
+% eerste koningin uit Qs.
+attack(Q1,N,[Q2|Qs]) :- Q1 is Q2+N; Q1 is Q2-N.
+	% Q1 valt Q2 aan indien ze zich op dezelfde diagonaal bevinden. D.w.z. dat
+	% de rijen juist N van elkaar moeten liggen (omdat de kolommen ook juist N
+	% van elkaar liggen).
+attack(Q1,N,[Q2|Qs]) :- N1 is N+1, attack(Q1,N1,Qs).
+ 
+% Deel (c) :
+
+% range(Mb,Me,Ns) genereert de lijst Ns van integers van Mb tot en met Me
+range(Mb,Me,[Mb|Ns]) :- Mb<Me, Mn is Mb+1, range(Mn,Me,Ns).
+range(Me,Me,[Me]).
+
+% select(X,HasXs,OneLessXs) verwijdert 1 occurence van X uit de lijst HasXs 
+select(X,[X|Xs],Xs).
+select(X,[Y|Ys],[Y|Zs]) :- select(X,Ys,Zs).
+
+% permutation(L,PL) genereert een permutatie van de lijst L.
+permutation([],[]).
+permutation(Xs,[Z|Zs]) :- select(Z,Xs,Ys), permutation(Ys,Zs).
+
+% De oplossing van het N-queens probleem bestaat erin voor alle mogelijke 
+% permutaties na te gaan of deze ranschikking een geldige oplossing voorstelt.
+queens(N,Qs) :- range(1,N,Ns), permutation(Ns,Qs), safe(Qs).
+
+% ?-  queens(8, Qs)
+% N¼1		Qs = [1, 5, 8, 6, 3, 7, 2, 4]
+% N¼2		Qs = [1, 6, 8, 3, 7, 4, 2, 5]
+% N¼3		Qs = [1, 7, 4, 6, 8, 2, 5, 3]
+% ...
+% N¼90		Qs = [8, 2, 5, 3, 1, 7, 4, 6]
+% N¼91		Qs = [8, 3, 1, 6, 2, 5, 7, 4]
+% N¼92		Qs = [8, 4, 1, 3, 6, 2, 7, 5]
+% No more solutions
+
+% Vraag 4
+% -------
+
+queens2(N,Qs) :- range(1,N,Ns), queens2(Ns,[],Qs).
+
+queens2(UnplacedQs,SafeQs,Qs) :-
+	select(Q,UnplacedQs,UnplacedQs1),
+	not attack(Q,SafeQs),
+	queens2(UnplacedQs1,[Q|SafeQs],Qs).
+	
+queens2([],Qs,Qs).
