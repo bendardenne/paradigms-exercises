@@ -78,6 +78,12 @@ A simple \texttt{if} condition in x86 works in two steps :
 
 Look up the \asmop{CMP} instruction as well as the conditional jump instructions (\asmop{JE}, \asmop{JNE}, \asmop{JZ}, ...) in the documentation of \textsf{Jasmin} or any x86 documentation of your choice.
 
+The \asmop{CMP} instruction is basically a glorified \asmop{SUB}: it subtracts one operands to the other, then sets the CPU flags depending on the result. For instance, if two operands \texttt{arg1} and \texttt{arg2} are equal, their difference is  $\texttt{arg1} - \texttt{arg2} = 0$ and the zero flag (\texttt{ZF}) is set to 1. If \texttt{arg1} is smaller, the result will be negative and the sign flag (\texttt{SF}) will be set, etc.
+
+The conditional jump instruction then check the values of the flags and jump to an address if the condition they check for is met. For instance, the \asmop{JE} instruction, which checks that the operands were strictly equal (\texttt{arg1 == arg2}) will check that the zero flag is set. Check out for instance \url{http://unixwiz.net/techtips/x86-jumps.html} for the full list of which flags the jump instructions check.
+
+Jump instructions take as operand an address which is the location in the code to jump to if necessary. Dealing with addresses directly can be terribly inconvenient for multiple reasons -- how can you know the address of a particular location, for instance? To help with this problem, the assembly language provides \emph{labels}. A label is a named reference to a user-defined location in the code, which the assembler will replace with the appropriate address when assembling the machine code. 
+
 \begin{instruction}
 	
 	Start by storing some example data we will use :\\
@@ -124,5 +130,41 @@ The following instruction will write appropriate data in the memory of \textsf{J
 You can also directly edit the table in the right panel of the interface of \textsf{Jasmin} to manually change the sample values. For the example above, you should obtain a mean absolute value of 43 (we use integer division to simplify things)
 \end{instruction}
 
+
+\section{Additional Exercise}
+
+\begin{flushright}
+	\small
+	\itshape
+	This exercise is not mandatory.
+\end{flushright}
+We will introduce the basics of how assembly handles functions and how every function (i.e. in C for instance) can be translated in assembly. 
+
+Using functions in assembly is highly platform-specific. Many choices must be made such as were will the return value be stored and how to pass parameters. We will only gloss over how these problems can be solved. 
+
+\begin{instruction}
+	Start by write a a piece of assembly code which implements the following function $f$:
+	
+	\begin{equation*}
+		f(n) = 
+		\begin{cases}
+			n/2 & \text{if $n$ is even} \\
+			3n + 1 & \text{if $n$ is odd} 
+		\end{cases}
+	\end{equation*}
+	
+	This piece of code should take its parameter $n$ in \asmreg{EAX} and store the result of $f(n)$ in the same register.
+	
+	Now write a program to verify the Collatz conjecture, which states that, for any starting number $n$, if we repeatedly apply the $f$ function defined above, we will always eventually reach $1$.
+	
+	Use a label to mark the beginning of the $f$ function you defined above. Then use \asmop{CALL} and \asmop{RET} to call and return from your ``function''. You shoud write, in consecutive memory addresses starting from \texttt{0x0}, the full sequence of numbers generated until you get to 1. 
+	
+	For instance, if you start with $n = 13$, you should get the following sequence in memory:
+	13, 40, 20, 10, 5, 16, 8, 4, 2, 1.
+	
+\end{instruction}
+
+
+We chose to pass the parameter in a register for simplicity here, but consider what would happen if we had more than 4 parameters? Actual systems usually use the stack, but some caution is in order, since the top of the stack always contain the return address, pushed there by \asmop{CALL}. Consider also what would happen if we wished to use recursive functions. Obviously, using functions in assembly is feasible but can be very tricky.
 
 \end{document}
