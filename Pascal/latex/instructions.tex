@@ -1,7 +1,7 @@
 \documentclass{../../tp}
 
 
-\title{Practical Session 2: Pascal}
+\title{Practical Session 2: \pascal}
 \author{}
 
 \begin{document}
@@ -11,7 +11,7 @@
 
 \section{Getting started}
 
-Download and install \textsf{FPC}, the \textsf{Free Pascal Compiler}\footnote{ \url{http://www.freepascal.org/download.var}}.\textsf{FPC} is a \textsf{Pascal} standalone command-line compiler. To compile a \textsf{Pascal} source, use: 
+Download and install \textsf{FPC}, the \textsf{Free Pascal Compiler}\footnote{ \url{http://www.freepascal.org/download.var}}.\textsf{FPC} is a \pascal standalone command-line compiler. To compile a \pascal source, use: 
 
 \verb|$ fpc sourceCode.pas|
 
@@ -51,10 +51,10 @@ It can be safely ignored.
 
 \subsection{Procedures and conditionals}
 
-Pascal is a procedural programming language. 
+\pascal is a procedural programming language. 
 
 \begin{instruction}
-	Write a Pascal function which implements the following function $f$:
+	Write a \pascal function which implements the following function $f$:
 		
 	\begin{equation*}
 		f(n) = 
@@ -69,7 +69,7 @@ Pascal is a procedural programming language.
 \begin{instruction}
 Write a program that queries the user for a number and checks the Collatz conjecture for this number.
 
-The Collatz conjecture states that for any starting number,  if we repeatedly apply the $f$ function defined above, we will eventually reach $1$. Use recursion to apply $f$ until reaching 1. 
+The Collatz conjecture states that for any starting number,  if we repeatedly apply the $f$ function defined above, we will always eventually reach $1$. Use recursion to apply $f$ until reaching 1. 
 
 Your program should print every step of the convergence. Example of output, starting with $n = 13$: 
 \begin{verbatim}
@@ -88,11 +88,55 @@ Re-write your Collatz conjecture program to use a loop instead of recursion.
 
 \section{Data Types}
 
-Pascal provides nice features for user-defined data types. 
+\pascal provides nice features for user-defined data types. 
 
+Enumerations allow you to enforce a certain defined value for a variable. Only enumerated values can be assigned to variable typed as an enumeration.
 
 \begin{instruction}
-	Write a program which defines a record for pupils with fields for name, form and year of entry. The data entry and display should take place in separate procedures.
+	
+Define an enumeration type \pascalcode{booktype}. A book can be either a \pascalcode{novel} or a \pascalcode{comic}.
+
 \end{instruction}
+
+
+An important feature of \pascal is variant records. A variant record is a record in which some of the fields are dependent on the value of one specific field. In other words, some parts of the fields 
+
+\begin{instruction}
+	You are in charge of writing the software to manage your local library. Write a program which defines a record for \pascalcode{book}s in a library. Each \pascalcode{book} should have a \emph{title} (\pascalcode{string}) as well as a \emph{kind} (\pascalcode{booktype}). Additionally: 
+	\begin{itemize}
+		\item if the book is a novel, it should have an \emph{author} (\pascalcode{string}).
+		\item if it's a comic book, it should have a \emph{writer} (for the scenario and dialogue) and an \emph{artist} (for the drawings). Both are of course \pascalcode{string}s.
+	\end{itemize} 
+	
+	Try to play around with those data structures. What happens if you try to assign a value to the writer field of a novel, or the author field of a comic book? What happens if you read that value?
+	Specifically, try to run the following and understand what is happening:
+	
+	\begin{minted}{pascal}
+	theHobbit.title := 'The Hobbit, or There and Back Again';
+	theHobbit.author := 'J. R. R. Tolkien';
+	    
+	luckyLuke.kind := comic;
+	luckyLuke.title := 'Billy the Kid';
+	luckyLuke.writer := 'Goscinny';
+	luckyLuke.artist := 'Morris';
+	    
+	    
+	{* Tests *}
+	writeln(theHobbit.kind);
+	writeln(theHobbit.writer);                                                                                    
+	writeln(theHobbit.author);
+	writeln(theHobbit.artist);
+	    
+	writeln(luckyLuke.kind);    
+	writeln(luckyLuke.author);
+	    
+	luckyLuke.author := 'Did I break Pascal yet?';
+	writeln(luckyLuke.author);
+	writeln(luckyLuke.writer);
+	\end{minted}
+	
+\end{instruction}
+
+\subsection{}
 
 \end{document}

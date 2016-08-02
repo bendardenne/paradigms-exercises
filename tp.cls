@@ -12,6 +12,7 @@
 \usepackage{hyperref}
 \usepackage{indentfirst}
 \usepackage{minted}
+\usepackage{xspace}
 
 \newenvironment{instruction}%
 {\vspace{15pt}
@@ -29,6 +30,17 @@
 \newcommand{\asmop}[1]{{\sffamily \bfseries \color{asmblue} #1}}
 \newcommand{\asmreg}[1]{{\sffamily \bfseries \color{asmgreen} #1}}
 
+
+\newcommand{\lang}[2]{\expandafter\def\csname#1\endcsname
+	{\textsf{#2}\xspace}}
+
+\lang{pascal}{Pascal}
+\lang{scheme}{Scheme}
+\lang{prolog}{Prolog}
+
+
+% Minted config
+\newmintinline[pascalcode]{pascal}{}
 
 
 \endinput

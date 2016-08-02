@@ -1,5 +1,6 @@
-MOV EAX, 29
-MOV EBX, 0x0	; First address
+MOV [0x0], 2049
+MOV EAX, [0x0]
+MOV EBX, 0x4	; First address
 JMP collatz
 
 f:	TEST EAX, 1
@@ -11,9 +12,8 @@ odd:	IMUL EAX, 3
 	ADD EAX, 1
 	RET
 
-collatz: 	
-	CALL f
+collatz: 	CALL f
 	MOV [EBX], EAX
 	ADD EBX, 4
 	CMP EAX, 1
-	JNE program
+	JNE collatz
