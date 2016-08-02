@@ -4,6 +4,7 @@
 
 \LoadClass[a4paper,10pt]{article} % Load the primary class with set options
 
+\date{}
 
 
 \usepackage{amsmath}
@@ -13,6 +14,7 @@
 \usepackage{indentfirst}
 \usepackage{minted}
 \usepackage{xspace}
+\usepackage{todonotes}
 
 \newenvironment{instruction}%
 {\vspace{15pt}
@@ -37,10 +39,10 @@
 \lang{pascal}{Pascal}
 \lang{scheme}{Scheme}
 \lang{prolog}{Prolog}
-
+\lang{C}{C}
 
 % Minted config
 \newmintinline[pascalcode]{pascal}{}
-
+\newmintinline[schemecode]{scheme}{}
 
 \endinput

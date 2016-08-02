@@ -1,0 +1,107 @@
+\documentclass{../../../tp}
+
+
+\title{Practical Session 3: \scheme (List processing)}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\section{Getting started}
+
+Download and install Racket\footnote{\url{https://racket-lang.org/}}. Racket is a general-purpose implementation of \scheme. It provides a command-line interpreter as well as a GUI called DrRacket. 
+\todo{finish instructions}
+
+
+
+\section{The basics}
+
+\scheme uses prefix notation. This means that applying a function $f$ to two arguments $x$ and $y$ is done with the following:
+
+\begin{minted}{scheme}
+	(f x y)
+\end{minted}
+
+For instance, to compute $2 * (14 + 17)$, you will write:
+
+\begin{minted}{scheme}
+	(* 2 (+ 14 17))
+\end{minted}
+
+
+\begin{instruction}
+
+Write and evaluate the following expression in \scheme :
+
+$$\frac{(134 + 121) * \frac{74}{\sqrt{8}}}{ 97.1 - \frac{exp(7)}{78 * 71} } $$
+
+\end{instruction}
+
+
+\section{Lists}
+
+\scheme is a dialect of LISP, which stands for \emph{List Processor} and lists are at the core of LISP languages. They are the main data structure and the language is designed to manipulate them in many ways, and use them to define more complex data structures.
+
+The basic building blocks of \scheme are \emph{atoms}. They can be numbers, symbols (\schemecode{'a}, \schemecode{'mysymbol}), characters (\schemecode{#\a}, \schemecode{#\Z}), booleans (\schemecode{#t} and \schemecode{#f} for true and false),... 
+
+Atoms can be combined together with the \schemecode{cons} function to form a \emph{pair}. This function takes two argument and returns a pair, in the which the first item is the first argument and the second item is the second argument. The \scheme interpreter will write a pair as:
+
+\begin{minted}{scheme}
+	(a . b)
+\end{minted}
+
+Given a pair, obtaining the first and second elements of the pair can be done with the infamous \schemecode{car} and \schemecode{cdr} functions.
+
+\begin{minted}{scheme}
+(define mypair (cons 'a  'b))
+(car mypair)	; -> Returns the symbol 'a
+(cdr mypair)	; -> Returns the symbol 'b
+\end{minted}
+
+
+A \emph{list} is a pair, in which the second element (the \schemecode{cdr}) is a list or the constant \schemecode{null} (also written \schemecode{'()}). For instance, this defines a list :
+
+\begin{minted}{scheme}
+(define mylist (cons 'a  null))
+(list? mylist) 		; -> returns #t, true
+\end{minted}
+
+You can see that a list has a recursive definition : a list is a pair where the second element is a list. The empty list \schemecode{'()} gives us a base case from which to build lists. Racket provides facilities to build lists straightaway more easily than using multiple \schemecode{cons}. For example, both of these lines define valid lists:
+
+\begin{minted}{scheme}
+'(22 21 23 #f 45 0 'a  "lists can have heterogeneous elements")
+
+(list 1 2 3 4 "A cat is fine too")
+\end{minted}
+
+
+
+\begin{instruction}
+Try to guess the value of the following expressions. Then verify your answer in racket.
+
+\begin{minted}{scheme}
+	(cons 1 (cons 2 (cons 3 (cons 4 '() ))))
+	(car (cons 1 (cons 2 '()))
+	(car (cdr (list 1 2 3 4)))
+	
+	(cadr '(1 2 3))
+	(caddr '(1 2 3))
+	(cdddr '(1 2 3))
+	
+	(cons (cons 'a 'b) (cons 1 '() ))
+	(list (list 1 2 3) 4 5 6)
+	
+\end{minted}
+	
+What is the difference between these two objects?
+		
+	\begin{minted}{scheme}
+	(cons 'a (cons 'b 'c))
+	(cons 'a (cons 'b (cons 'c '() ))) 	
+	\end{minted}
+			
+\end{instruction}
+
+
+\end{document}

@@ -49,10 +49,17 @@ It can be safely ignored.
 
 \section{Imperative programs}
 
-\subsection{Procedures and conditionals}
+\subsection{Flow Control}
 
-\pascal is a procedural programming language. 
+\pascal is an imperative programming language, like \C for instance. As such, it offers the usual common idioms for loops, conditions etc. 
 
+\begin{instruction}
+
+Rewrite the AbsMean program of the Assembly session in \pascal. 
+
+\end{instruction}
+
+\subsection{Procedures and functions}
 \begin{instruction}
 	Write a \pascal function which implements the following function $f$:
 		
@@ -69,7 +76,7 @@ It can be safely ignored.
 \begin{instruction}
 Write a program that queries the user for a number and checks the Collatz conjecture for this number.
 
-The Collatz conjecture states that for any starting number,  if we repeatedly apply the $f$ function defined above, we will always eventually reach $1$. Use recursion to apply $f$ until reaching 1. 
+The Collatz conjecture states that for any starting number,  if we repeatedly apply the $f$ function defined above, we will always eventually reach $1$. Use recursion to apply $f$ until reaching 1.
 
 Your program should print every step of the convergence. Example of output, starting with $n = 13$: 
 \begin{verbatim}
@@ -78,11 +85,9 @@ Input a positive integer:
 13
 13 40 20 10 5 16 8 4 2 1
 \end{verbatim}
-\end{instruction}
 
-\subsection{Loops}
-\begin{instruction}
-Re-write your Collatz conjecture program to use a loop instead of recursion.
+Write two solutions : one using recursion and one using an iterative process.
+
 \end{instruction}
 
 
@@ -98,13 +103,18 @@ Define an enumeration type \pascalcode{booktype}. A book can be either a \pascal
 
 \end{instruction}
 
-
-An important feature of \pascal is variant records. A variant record is a record in which some of the fields are dependent on the value of one specific field. In other words, some parts of the fields 
+\pascal allows programmers to define heterogeneous data structures called \pascalcode{record}s (think of \C's \mintinline{C}{struct}s) containing multiple fields of different types, including other records or enumerations.
 
 \begin{instruction}
-	You are in charge of writing the software to manage your local library. Write a program which defines a record for \pascalcode{book}s in a library. Each \pascalcode{book} should have a \emph{title} (\pascalcode{string}) as well as a \emph{kind} (\pascalcode{booktype}). Additionally: 
+Write a program which defines a \pascalcode{record} for \pascalcode{book}s in a library. Each \pascalcode{book} should have a \emph{title} and an \emph{author} (\pascalcode{string}), a publication date (define an auxiliary \pascalcode{type date}) as well as a \emph{kind} (\pascalcode{booktype}).
+\end{instruction}
+
+An important feature of \pascal is variant records. A variant record is a record in which some of the fields are dependent on the value of one specific field. In other words, the variant fields have a different type depending on their use. This feature of \pascal can be abused to circumvent \pascal's static, strong typing, and allow the programmer to access the same memory location as different types. 
+
+\begin{instruction}
+Modify your \pascalcode{book record} to have additional records for novels and comic books. More precisely:
 	\begin{itemize}
-		\item if the book is a novel, it should have an \emph{author} (\pascalcode{string}).
+		\item if the book is a novel, it should have an \emph{author} (\pascalcode{string}) and a ISBN number (\pascalcode{Int64}).
 		\item if it's a comic book, it should have a \emph{writer} (for the scenario and dialogue) and an \emph{artist} (for the drawings). Both are of course \pascalcode{string}s.
 	\end{itemize} 
 	
@@ -114,29 +124,36 @@ An important feature of \pascal is variant records. A variant record is a record
 	\begin{minted}{pascal}
 	theHobbit.title := 'The Hobbit, or There and Back Again';
 	theHobbit.author := 'J. R. R. Tolkien';
-	    
+	theHobbit.ISBN := 9780007525492;
+
 	luckyLuke.kind := comic;
 	luckyLuke.title := 'Billy the Kid';
 	luckyLuke.writer := 'Goscinny';
 	luckyLuke.artist := 'Morris';
-	    
-	    
+
+
 	{* Tests *}
 	writeln(theHobbit.kind);
-	writeln(theHobbit.writer);                                                                                    
 	writeln(theHobbit.author);
+	writeln(theHobbit.writer);
 	writeln(theHobbit.artist);
-	    
-	writeln(luckyLuke.kind);    
+
+	writeln(luckyLuke.kind);        
 	writeln(luckyLuke.author);
-	    
+
 	luckyLuke.author := 'Did I break Pascal yet?';
 	writeln(luckyLuke.author);
 	writeln(luckyLuke.writer);
+
 	\end{minted}
-	
+
+	What does the garbage printed by \pascalcode{theHobbit.artist} correspond to?
+	What happens if you set the ISBN to 31084784824439585 and print the artist field again? 
 \end{instruction}
 
-\subsection{}
 
+\section{Something else ????}
+
+FIXME 
 \end{document}
+	

@@ -37,14 +37,6 @@ chez moi: ajout de
 dans ~/.fpc.cfg
 
 
-## Ressources
-Très facile de trouver des tutos.
- 
- - Exercices avec solution: 
-	+ <http://www.asiplease.net/computing/pascal/pascal_programming_exercises.htm>
-	+ <https://github.com/Yonaba/pascal-exercises>
-
-
 # Scheme 
 (3 semaines + 1 mission)
 
