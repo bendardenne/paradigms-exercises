@@ -14,12 +14,21 @@
   (sum-func cube a b))
 
 
-
 (define (how-many n l)
   (count (lambda (x) (equal? n x)) l))
 
-(define (square x) (* x x))
-(define (middle f)
+
+; sum-cubes with map
+(define (sum-cubes2 a b)
+  (apply + (map cube (range a (+ b 1)))))
+
+
+(define listoflists '((1 2 3 1) (45 1  3 4 5) (4 5 64) 
+		(4 6) (144) (0 4 4) (14 464 4 7 6) (1 1 4 65)))
+(define (max-list l) (map (lambda (x) (apply max x)) l))
+
+  
+(define (mean f)
   (lambda (x y) (/ (+ (f x) (f y)) 2)))
 
-
+(define mean-cube (mean cube))

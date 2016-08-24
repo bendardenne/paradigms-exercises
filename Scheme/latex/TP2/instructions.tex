@@ -20,11 +20,11 @@ Like many other functional programming languages, \scheme has first-class functi
 
 For instance, \scheme has a built-in \schemecode{filter} function. This function takes two arguments: the first is a predicate $p$ and the second is a list $l$. It returns the list $l$, in which all the elements for which $p$ is false have been removed. Consider this example:
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
 	(filter positive? mylist)
 	 
-	 > '(1 2 4 5 7 8)
+	 -> '(1 2 4 5 7 8)
 \end{minted}
 
 \schemecode{positive?} is of course a built-in \scheme predicate which returns \schemecode{#t} if its argument is a positive number. 
@@ -33,7 +33,7 @@ For instance, \scheme has a built-in \schemecode{filter} function. This function
 \begin{instruction}
 	In the previous session, you wrote a \schemecode{sum-cubes} function which may have looked like the following: 
 	
-	\begin{minted}{scheme}
+	\begin{minted}{racket}
 	(define (sum-cubes a b)
 	   (if (> a b)
 	      0
@@ -43,7 +43,7 @@ For instance, \scheme has a built-in \schemecode{filter} function. This function
 	Rewrite a more generic \schemecode{sum-func} which takes three arguments $f$, $a$ and $b$ and which returns the sum of $f$ applied to all integers in $\{a, a+1, ... b\}$. Uses this function to perform a \schemecode{sum-cubes}, for instance:
 	\begin{minted}{scheme}
 	(sum-func cube 0 3)
-	> 36
+	-> 36
 	\end{minted}
 	
 	Finally, define \schemecode{sum-cubes} in terms of this new \schemecode{sum-func}.
@@ -56,8 +56,7 @@ Sometimes it can be useful to write a small function as argument to another dire
 
 \begin{minted}{scheme}
 (filter (lambda (x) (not (equal? x 5))) mylist)
-
-> '(1 2 -3 4 -6 7 8 -9)
+-> '(1 2 -3 4 -6 7 8 -9)
 \end{minted}
 
 The  \schemecode{lambda} expression creates an anonymous function which, to $x$ associates the boolean $x != 5$. 
@@ -67,23 +66,37 @@ The  \schemecode{lambda} expression creates an anonymous function which, to $x$ 
 \end{instruction}
 
 \begin{instruction}
-	Many functions built into \scheme take a functional parameter. We have already seen \schemecode{filter}, and others are \schemecode{apply, map, foldr}. 
-	Try to guess / understand what each does based on the following examples:
+	Many functions built into \scheme take a functional parameter. We have already seen \schemecode{filter}, and others are \schemecode{apply, map, foldr, foldl}. 
+	\begin{enumerate}
+		\item 	Try to guess / understand what each does based on the following examples:
 	
-	\begin{minted}{scheme}
+	\begin{minted}{racket}
 	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
 	
 	(map (lambda (x) (+ x 1)) mylist)
 	(apply + mylist)
 	(apply max mylist)
+	(foldl + 10 mylist)
 	\end{minted}
 
+	\item Re-implement  \schemecode{sum-cubes} in terms of \schemecode{map} and  \schemecode{apply}. You may also find the \schemecode{range} builtin useful.
+
+	\item Write a function which takes a list of lists and returns a list containing the maximum of each list.
+	\begin{minted}{racket}
+	
+	(define listoflists '((1 2 3 1) (45 1 3 4 5) (4 5 64) 
+		(4 6) (144) (0 4 4) (14 464 4 7 6)))
+	
+	(max-list listoflists)
+	-> '(3 45 64 6 144 4 464)
+	\end{minted}
+	\end{enumerate}
 \end{instruction}
 
-
+	
 \subsection{Higher-order functions}
 
-As said above, it is possible for a function to return a function (think for example about what should the \schemecode{lambda} builtin return). 
+As said above, it is possible for a function to return a function (think for example about what the \schemecode{lambda} builtin returns). 
 
 \begin{instruction}
 	Write a function \schemecode{mean} which takes as argument a numeric function $f: \mathbb{R} \rightarrow \mathbb{R}$ and returns the function: 
@@ -91,11 +104,13 @@ As said above, it is possible for a function to return a function (think for exa
 	$$ f': \mathbb{R} \times \mathbb{R} \rightarrow \mathbb{R} \qquad  x,y  \mapsto  \frac{f(x) + f(y)}{2}$$
 	
 	
-	Use this function with the \schemecode{cube} function to compute the mean between  $4^3$ and $16^3$.
+	Use this function with the \schemecode{cube} function to generate a \schemecode{mean-cube} function. Then compute the mean-cube of 4 and 16.
+	
+	\begin{minted}{racket}
+	(mean-cube 4 16)
+	-> 2080
+	\end{minted}
+	
 \end{instruction}
-
-
-
-
 
 \end{document}

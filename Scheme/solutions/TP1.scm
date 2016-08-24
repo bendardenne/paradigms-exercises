@@ -35,6 +35,15 @@
       ((even? n) (collatz? (/ n 2)))
       (else (collatz? (+ (* n 3) 1))))))
 
+
+; Tail recursive
+(define (sum-cubes-tail a b)
+  (define (sum-cubes-iter a b sum)
+    (if (> a b)
+        sum
+        (sum-cubes-iter (+ a 1) b (+ (cube a) sum))))
+  (sum-cubes-iter a b 0))
+
 ; Recursion on lists
 
 (define (how-many x l)
@@ -52,4 +61,10 @@
   (if (null? l) '()
         (append (list (car l) (car l)) (duplicate (cdr l)))))
 
-(flatten (map (lambda (x) (list x x)) mylist))
+(define (collatz-list n)
+  (cond ((equal? 1 n) '(1))
+      ((even? n) (cons n (collatz-list (/ n 2))))
+      (else (cons n (collatz-list (+ (* n 3) 1))))))
+
+
+

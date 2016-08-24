@@ -20,13 +20,13 @@ Every source file in DrRacket should start with the expression \schemecode{#lang
 
 \scheme uses prefix notation. This means that applying a function $f$ to two arguments $x$ and $y$ is done with the following:
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 	(f x y)
 \end{minted}
 
 For instance, to compute $2 * (14 + 17)$, you will write:
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 	(* 2 (+ 14 17))
 \end{minted}
 
@@ -39,7 +39,7 @@ $$\frac{(134 + 121) * \frac{74}{\sqrt{8}}}{ 97.1 - \frac{exp(7)}{78 * 71} } $$
 
 Even flow control uses such a notation. For instance, an \verb|if| condition would be written as:
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 (if test-expr true-expr false-expr)
 
 (if (positive? a) "a is positive" "a is negative")
@@ -61,7 +61,7 @@ Even flow control uses such a notation. For instance, an \verb|if| condition wou
 	
 	You can start from the following skeleton to get you started:
 	
-	\begin{minted}{scheme}
+	\begin{minted}{racket}
 	(define a -8)
 	(define b ... )
 	(writeln b)     
@@ -80,13 +80,13 @@ The basic building blocks of \scheme are \emph{atoms}. They can be numbers, symb
 
 Atoms can be combined together with the \schemecode{cons} function to form a \emph{pair}. This function takes two argument and returns a pair, in the which the first item is the first argument and the second item is the second argument. The \scheme interpreter will write a pair as:
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 	(a . b)
 \end{minted}
 
 Given a pair, obtaining the first and second elements of the pair can be done with the infamous \car and \cdr functions.
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 (define mypair (cons 'a  'b))
 (car mypair)	; -> Returns the symbol 'a
 (cdr mypair)	; -> Returns the symbol 'b
@@ -95,9 +95,9 @@ Given a pair, obtaining the first and second elements of the pair can be done wi
 
 A \emph{list} is a pair, in which the second element (the \cdr) is a list or the constant \schemecode{null} (also written \schemecode{'()}). For instance, this defines a list :
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 (define mylist (cons 'a  null))
-(list? mylist) 		; -> returns #t, true
+(list? mylist) 	; -> returns #t, true
 \end{minted}
 
 You can see that a list has a recursive definition : a list is a pair where the second element is a list. The empty list \schemecode{'()} gives us a base case from which to build lists. Racket provides facilities to build lists straightaway more easily than using multiple \schemecode{cons}. For example, both of these lines define valid lists:
@@ -113,7 +113,7 @@ You can see that a list has a recursive definition : a list is a pair where the 
 \begin{instruction}
 Try to guess the value of the following expressions. Then verify your answer in racket.
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 	(cons 1 (cons 2 (cons 3 (cons 4 '() ))))
 	(car (cons 1 (cons 2 '()))
 	(car (cdr (list 1 2 3 4)))
@@ -132,7 +132,7 @@ Try to guess the value of the following expressions. Then verify your answer in 
 	
 What is the difference between these two objects?
 		
-	\begin{minted}{scheme}
+	\begin{minted}{racket}
 	(cons 'a (cons 'b 'c))
 	(cons 'a (cons 'b (cons 'c '() ))) 	
 	\end{minted}
@@ -147,7 +147,7 @@ What is the difference between these two objects?
 
 For now, we will just explore the basic syntax to define functions in \scheme and how many problems in \scheme are defined recursively. Look at the following example then try to implement some more complex functions listed below.
 
-\begin{minted}{scheme}
+\begin{minted}{racket}
 	(define (cube x) (* x x x))
 \end{minted}
 
@@ -156,12 +156,14 @@ For now, we will just explore the basic syntax to define functions in \scheme an
 
 \subsection{Recursion on numbers}
 
+
+
 \begin{instruction}
 	Write a function \schemecode{sum-cubes} of two integer arguments $a$ and $b$ ($a < b$) which computes the sum of cubes of the integers in $\{a, a+1, ...,  b\}$. For instance \schemecode{(sum-cubes 0 3)} should return 36 ($0^3 + 1^3 + 2^3 + 3^3 = 36$).
 	
 	Hint: $sumCubes(a,b) = a^3 + sumCubes(a+1, b)$
 	
-	\begin{minted}{scheme}
+	\begin{minted}{racket}
 	(define (sum-cubes a b) 
 		... 
 		)
@@ -186,6 +188,24 @@ For now, we will just explore the basic syntax to define functions in \scheme an
 \end{instruction}
 
 
+\subsection{Tail recursion}
+
+Racket implements tail-recursion. To put it in simple words, tail-recursion occurs whenever a recursive function calls is located at the end of the function: in this situation, the control does not need to go back to the caller function to the callee, because there is nothing left to execute in the caller function. Because of this, the recursive calls can actually be implemented as a loop under the hood, avoiding the performance issues that recursive functions can suffer (filling up the call stack). See the racket doc\footnote{\url{https://docs.racket-lang.org/guide/Lists\_\_Iteration\_\_and\_Recursion.html\#\%28part._tail-recursion\%29}} for more details about tail recursion.
+
+\begin{instruction}
+Is the \schemecode{sum-cubes} function you implemented above tail-recursive? Why? If not, can you make it tail-recursive?
+
+Compare the performance difference between both implementations with
+
+\begin{minted}{racket}
+(time (sum-cubes 0 999999))
+(time (sum-cubes-tail 0 999999))
+\end{minted}
+
+(notice how racket handles big numbers naturally).
+\end{instruction}
+
+
 \subsection{Recursion on lists}
 
 Using the \car and \cdr primitives, you can access the head and tail of a list. With this mechanism available, it is easy to recursively scan a list. As always with recursion, you will first need to define a base case: with lists, this is often the case of the empty list \schemecode{'()}. Then, figure out how what should happen when recursing from this base case to the case of a one element list. For instance, to write a function which adds one to every element of a list 
@@ -193,7 +213,7 @@ Using the \car and \cdr primitives, you can access the head and tail of a list. 
 \begin{instruction}	
 	Write a function \schemecode{how-many} which takes a first argument $x$ and a second list argument $l$, and returns the occurrence count of $x$ in $l$. Example:
 	
-	\begin{minted}{scheme}
+	\begin{minted}{racket}
 	(how-many 4 '(1 4 5 2 3 4 a b 4 4 c 4))
 	\end{minted}
 	
@@ -203,11 +223,21 @@ Using the \car and \cdr primitives, you can access the head and tail of a list. 
 \begin{instruction}	
 	Write a function \schemecode{duplicate} which takes a list and returns the same list where every element has been duplicated. Example:
 	
-	\begin{minted}{scheme}
+	\begin{minted}{racket}
 	(duplicate '(Do duck quacks echo?))
 	\end{minted}
 	
 	should return \schemecode{'(Do Do duck duck quacks quacks echo? echo? )}
+\end{instruction}
+
+
+\begin{instruction}	
+	Re-write your \schemecode{collatz?} function to generate a list of the successive values computed by the process. 
+	
+	\begin{minted}{racket}
+	(collatz-list 13)
+	-> '(13 40 20 10 5 16 8 4 2 1)
+	\end{minted}
 \end{instruction}
 
 
