@@ -10,8 +10,9 @@
 
 \section{Getting started}
 
-Download and install Racket\footnote{\url{https://racket-lang.org/}}. Racket is a general-purpose implementation of \scheme. It provides a command-line interpreter as well as a GUI called DrRacket. 
-\todo{finish instructions}
+Download and install Racket\footnote{\url{https://racket-lang.org/}}. Racket is a general-purpose implementation of \scheme. It provides a command-line interpreter as well as a GUI called DrRacket. In the GUI, you can write a script in the top panel. The bottom panel is an interpreter in which you can write expressions directly, or see the result of running the script typed in the top panel.
+
+Every source file in DrRacket should start with the expression \schemecode{#lang racket} which tells the interpreter which variant of the language you want to use. If you wish to use your own text editor, you can run your programs with \verb|racket -r myscript.scm|.
 
 
 
@@ -29,14 +30,46 @@ For instance, to compute $2 * (14 + 17)$, you will write:
 	(* 2 (+ 14 17))
 \end{minted}
 
-
 \begin{instruction}
 
 Write and evaluate the following expression in \scheme :
 
 $$\frac{(134 + 121) * \frac{74}{\sqrt{8}}}{ 97.1 - \frac{exp(7)}{78 * 71} } $$
-
 \end{instruction}
+
+Even flow control uses such a notation. For instance, an \verb|if| condition would be written as:
+
+\begin{minted}{scheme}
+(if test-expr true-expr false-expr)
+
+(if (positive? a) "a is positive" "a is negative")
+\end{minted}
+
+
+\begin{instruction}
+	
+	Try to re-write the following \pascal piece of code in \scheme :
+	
+	\begin{minted}{pascal}
+	a := -8;
+	
+	if a > 0 then b := 2 * sqrt(a)
+	else b := 7 * sqrt(-a) / -a;
+	
+	writeln(b)
+	\end{minted}
+	
+	You can start from the following skeleton to get you started:
+	
+	\begin{minted}{scheme}
+	(define a -8)
+	(define b ... )
+	(writeln b)     
+	\end{minted}
+	
+\end{instruction}
+
+
 
 
 \section{Lists}
@@ -51,7 +84,7 @@ Atoms can be combined together with the \schemecode{cons} function to form a \em
 	(a . b)
 \end{minted}
 
-Given a pair, obtaining the first and second elements of the pair can be done with the infamous \schemecode{car} and \schemecode{cdr} functions.
+Given a pair, obtaining the first and second elements of the pair can be done with the infamous \car and \cdr functions.
 
 \begin{minted}{scheme}
 (define mypair (cons 'a  'b))
@@ -60,7 +93,7 @@ Given a pair, obtaining the first and second elements of the pair can be done wi
 \end{minted}
 
 
-A \emph{list} is a pair, in which the second element (the \schemecode{cdr}) is a list or the constant \schemecode{null} (also written \schemecode{'()}). For instance, this defines a list :
+A \emph{list} is a pair, in which the second element (the \cdr) is a list or the constant \schemecode{null} (also written \schemecode{'()}). For instance, this defines a list :
 
 \begin{minted}{scheme}
 (define mylist (cons 'a  null))
@@ -92,6 +125,9 @@ Try to guess the value of the following expressions. Then verify your answer in 
 	(cons (cons 'a 'b) (cons 1 '() ))
 	(list (list 1 2 3) 4 5 6)
 	
+	(caddr '((1 4 8 7) (1 3 4 2 5) (0 32 (54 4 46))))
+	(caaddr '((1 4 8 7) (1 3 4 2 5) (0 32 (54 4 46))))
+	(cadar '((1 4 8 7) (1 3 4 2 5) (0 32 (54 4 46))))
 \end{minted}
 	
 What is the difference between these two objects?
@@ -102,6 +138,79 @@ What is the difference between these two objects?
 	\end{minted}
 			
 \end{instruction}
+
+
+
+\section{Functions}
+
+\scheme follows the functional programming paradigm. In the next session, we will see what this means and how functions in \scheme can be passed around and manipulated as first order items.
+
+For now, we will just explore the basic syntax to define functions in \scheme and how many problems in \scheme are defined recursively. Look at the following example then try to implement some more complex functions listed below.
+
+\begin{minted}{scheme}
+	(define (cube x) (* x x x))
+\end{minted}
+
+
+
+
+\subsection{Recursion on numbers}
+
+\begin{instruction}
+	Write a function \schemecode{sum-cubes} of two integer arguments $a$ and $b$ ($a < b$) which computes the sum of cubes of the integers in $\{a, a+1, ...,  b\}$. For instance \schemecode{(sum-cubes 0 3)} should return 36 ($0^3 + 1^3 + 2^3 + 3^3 = 36$).
+	
+	Hint: $sumCubes(a,b) = a^3 + sumCubes(a+1, b)$
+	
+	\begin{minted}{scheme}
+	(define (sum-cubes a b) 
+		... 
+		)
+	\end{minted}
+\end{instruction}
+
+
+
+\begin{instruction}	
+	
+	Write a recursive function \schemecode{collatz?} which checks the Collatz conjecture for an integer $n$. Print all the steps of the check along the way (use  \schemecode{writeln} for instance). Remember from the previous weeks that the Collatz conjecture states that the following process converges to 1:
+	
+		\begin{equation*}
+		f(n) = 
+		\begin{cases}
+		n/2 & \text{if $n$ is even} \\
+		3n + 1 & \text{if $n$ is odd} 
+		\end{cases}
+		\end{equation*}
+	
+	Hints: You may find the \schemecode{begin} and \schemecode{cond} builtins useful. Racket also has the  \schemecode{even?} and \schemecode{odd?} predicates built-in. As a side-exercise, can you define versions of these predicates yourself?
+\end{instruction}
+
+
+\subsection{Recursion on lists}
+
+Using the \car and \cdr primitives, you can access the head and tail of a list. With this mechanism available, it is easy to recursively scan a list. As always with recursion, you will first need to define a base case: with lists, this is often the case of the empty list \schemecode{'()}. Then, figure out how what should happen when recursing from this base case to the case of a one element list. For instance, to write a function which adds one to every element of a list 
+
+\begin{instruction}	
+	Write a function \schemecode{how-many} which takes a first argument $x$ and a second list argument $l$, and returns the occurrence count of $x$ in $l$. Example:
+	
+	\begin{minted}{scheme}
+	(how-many 4 '(1 4 5 2 3 4 a b 4 4 c 4))
+	\end{minted}
+	
+	should return 5.
+\end{instruction}
+
+\begin{instruction}	
+	Write a function \schemecode{duplicate} which takes a list and returns the same list where every element has been duplicated. Example:
+	
+	\begin{minted}{scheme}
+	(duplicate '(Do duck quacks echo?))
+	\end{minted}
+	
+	should return \schemecode{'(Do Do duck duck quacks quacks echo? echo? )}
+\end{instruction}
+
+
 
 
 \end{document}

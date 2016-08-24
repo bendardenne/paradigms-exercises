@@ -8,6 +8,7 @@
 
 
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{color}
 \usepackage{fancybox}
 \usepackage{hyperref}
@@ -44,5 +45,11 @@
 % Minted config
 \newmintinline[pascalcode]{pascal}{}
 \newmintinline[schemecode]{scheme}{}
+
+\newcommand{\keyword}[2]{\expandafter\def\csname#2\endcsname
+	{\mintinline{#1}{#2}\xspace}}
+
+\keyword{scheme}{car}
+\keyword{scheme}{cdr}
 
 \endinput

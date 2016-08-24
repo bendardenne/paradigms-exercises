@@ -10,11 +10,90 @@
 
 
 
+\section{Functional Programming}
+
+\scheme follows the functional programming paradigm. To put it simply, functional programming is built around the concept of \emph{functions}, viewed as mathematical objects: a function takes some inputs and returns an output, with no other side-effects. Functional programming avoids mutation of data: an argument passed to a function is never modified itself, it's a new object which is returned as the result of applying a function to an argument. In functional programming, a program is viewed as a series of functions applied to input data.
+
+\section{First-class functions}
+
+Like many other functional programming languages, \scheme has first-class functions. This means that functions can be treated like any other entities and the program, and more specifically, a function can be passed as argument to, can be returned from a function and can stored in a variable.
+
+For instance, \scheme has a built-in \schemecode{filter} function. This function takes two arguments: the first is a predicate $p$ and the second is a list $l$. It returns the list $l$, in which all the elements for which $p$ is false have been removed. Consider this example:
+
+\begin{minted}{scheme}
+	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
+	(filter positive? mylist)
+	 
+	 > '(1 2 4 5 7 8)
+\end{minted}
+
+\schemecode{positive?} is of course a built-in \scheme predicate which returns \schemecode{#t} if its argument is a positive number. 
 
 
-\section{Functions}
+\begin{instruction}
+	In the previous session, you wrote a \schemecode{sum-cubes} function which may have looked like the following: 
+	
+	\begin{minted}{scheme}
+	(define (sum-cubes a b)
+	   (if (> a b)
+	      0
+	      (+ (cube a) (sum-cubes (+ a 1) b))))
+	\end{minted}
+	
+	Rewrite a more generic \schemecode{sum-func} which takes three arguments $f$, $a$ and $b$ and which returns the sum of $f$ applied to all integers in $\{a, a+1, ... b\}$. Uses this function to perform a \schemecode{sum-cubes}, for instance:
+	\begin{minted}{scheme}
+	(sum-func cube 0 3)
+	> 36
+	\end{minted}
+	
+	Finally, define \schemecode{sum-cubes} in terms of this new \schemecode{sum-func}.
+\end{instruction}
 
-\scheme follows the a functional 
+
+\subsection{Anonymous functions}
+
+Sometimes it can be useful to write a small function as argument to another directly in the function call, without \schemecode{define}'ing it entirely. This is where \schemecode{lambda}'s become handy. For instance, to use filter with a predicate that filter all items equal to 5:
+
+\begin{minted}{scheme}
+(filter (lambda (x) (not (equal? x 5))) mylist)
+
+> '(1 2 -3 4 -6 7 8 -9)
+\end{minted}
+
+The  \schemecode{lambda} expression creates an anonymous function which, to $x$ associates the boolean $x != 5$. 
+
+\begin{instruction}
+	In the previous session, you defined a \schemecode{how-many} function. A function providing a more generic version of this is actually built into \scheme: \schemecode{count}. Try to implement an equivalent \schemecode{how-many} function using  \schemecode{count} and an anonymous function.
+\end{instruction}
+
+\begin{instruction}
+	Many functions built into \scheme take a functional parameter. We have already seen \schemecode{filter}, and others are \schemecode{apply, map, foldr}. 
+	Try to guess / understand what each does based on the following examples:
+	
+	\begin{minted}{scheme}
+	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
+	
+	(map (lambda (x) (+ x 1)) mylist)
+	(apply + mylist)
+	(apply max mylist)
+	\end{minted}
+
+\end{instruction}
+
+
+\subsection{Higher-order functions}
+
+As said above, it is possible for a function to return a function (think for example about what should the \schemecode{lambda} builtin return). 
+
+\begin{instruction}
+	Write a function \schemecode{mean} which takes as argument a numeric function $f: \mathbb{R} \rightarrow \mathbb{R}$ and returns the function: 
+	
+	$$ f': \mathbb{R} \times \mathbb{R} \rightarrow \mathbb{R} \qquad  x,y  \mapsto  \frac{f(x) + f(y)}{2}$$
+	
+	
+	Use this function with the \schemecode{cube} function to compute the mean between  $4^3$ and $16^3$.
+\end{instruction}
+
 
 
 
