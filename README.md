@@ -52,6 +52,19 @@ dans ~/.fpc.cfg
 
 set-car!/set-cdr!  SICP sec 3.3.1
 
+Rajouter exo sur if special form et ordre d'évaluation des arguments (écrire un my-if avec cond)
+Rajouter accumulate
+Parameter lists
+	- point et apply (présent dans prolog, équivalent dans ruby, python, scala,..)
+	implémenter my-plus
+let et let\*: scoping
+lexical scoping  
+
+Modifier pour utiliser r5rs
+
+
+http://www.ee.columbia.edu/~johnny/studies/aop/
+
 ## Mission
 
 Interpreteur/compilateur pseudo-code 

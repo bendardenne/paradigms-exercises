@@ -44,7 +44,7 @@
 
 % Minted config
 \newmintinline[pascalcode]{pascal}{}
-\newmintinline[schemecode]{racket}{}
+\newmintinline[schemecode]{scheme}{}
 
 \newcommand{\keyword}[2]{\expandafter\def\csname#2\endcsname
 	{\mintinline{#1}{#2}\xspace}}

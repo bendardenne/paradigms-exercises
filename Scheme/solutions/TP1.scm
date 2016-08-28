@@ -1,4 +1,4 @@
-#lang racket
+#lang r5rs
 
 ; Basics
 (define a -8)
@@ -8,7 +8,7 @@
       (* 2 (sqrt a))
       (/ (* 7 (sqrt (- a))) (- a))))
 
-(writeln b)
+(display b)
 
 
 ; Functions
@@ -24,13 +24,13 @@
 
 ; Recursion on numbers
 (define (my-even? x)
-  (equal? (modulo x 2) 0))
+  (zero? (modulo x 2)))
 (define (my-odd? x)
   (not (my-even? x)))
 
 (define (collatz? n)
   (begin
-    (writeln n)
+    (display n)
     (cond ((equal? 1 n) #t)
       ((even? n) (collatz? (/ n 2)))
       (else (collatz? (+ (* n 3) 1))))))
@@ -65,6 +65,4 @@
   (cond ((equal? 1 n) '(1))
       ((even? n) (cons n (collatz-list (/ n 2))))
       (else (cons n (collatz-list (+ (* n 3) 1))))))
-
-
 

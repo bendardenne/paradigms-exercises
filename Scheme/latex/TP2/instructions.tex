@@ -18,9 +18,10 @@
 
 Like many other functional programming languages, \scheme has first-class functions. This means that functions can be treated like any other entities and the program, and more specifically, a function can be passed as argument to, can be returned from a function and can stored in a variable.
 
-For instance, \scheme has a built-in \schemecode{filter} function. This function takes two arguments: the first is a predicate $p$ and the second is a list $l$. It returns the list $l$, in which all the elements for which $p$ is false have been removed. Consider this example:
+\begin{instruction}
+	Write a \schemecode{(filter p l)} function. This function takes two arguments: the first is a predicate $p$ and the second is a list $l$. It returns the list $l$, in which all the elements for which $p$ is false have been removed. Consider this example:
 
-\begin{minted}{racket}
+\begin{minted}{scheme}
 	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
 	(filter positive? mylist)
 	 
@@ -28,12 +29,12 @@ For instance, \scheme has a built-in \schemecode{filter} function. This function
 \end{minted}
 
 \schemecode{positive?} is of course a built-in \scheme predicate which returns \schemecode{#t} if its argument is a positive number. 
-
+\end{instruction}
 
 \begin{instruction}
 	In the previous session, you wrote a \schemecode{sum-cubes} function which may have looked like the following: 
 	
-	\begin{minted}{racket}
+	\begin{minted}{scheme}
 	(define (sum-cubes a b)
 	   (if (> a b)
 	      0
@@ -52,37 +53,35 @@ For instance, \scheme has a built-in \schemecode{filter} function. This function
 
 \subsection{Anonymous functions}
 
-Sometimes it can be useful to write a small function as argument to another directly in the function call, without \schemecode{define}'ing it entirely. This is where \schemecode{lambda}'s become handy. For instance, to use filter with a predicate that filter all items equal to 5:
+Sometimes it can be useful to write a small function as argument to another directly in the function call, without \schemecode{define}'ing it entirely. This is where \schemecode{lambda}'s become handy. For instance, to use \schemecode{filter} with a predicate that keeps all items smaller than 5:
 
 \begin{minted}{scheme}
-(filter (lambda (x) (not (equal? x 5))) mylist)
--> '(1 2 -3 4 -6 7 8 -9)
+(filter (lambda (x) (< x 5)) mylist)
+-> (1 2 -3 4 -6 -9)
 \end{minted}
 
 The  \schemecode{lambda} expression creates an anonymous function which, to $x$ associates the boolean $x != 5$. 
 
-\begin{instruction}
-	In the previous session, you defined a \schemecode{how-many} function. A function providing a more generic version of this is actually built into \scheme: \schemecode{count}. Try to implement an equivalent \schemecode{how-many} function using  \schemecode{count} and an anonymous function.
-\end{instruction}
+\subsection{Map and apply}
 
 \begin{instruction}
-	Many functions built into \scheme take a functional parameter. We have already seen \schemecode{filter}, and others are \schemecode{apply, map, foldr, foldl}. 
+	Some functions defined in the \scheme standard take a functional parameter: for instance \schemecode{apply} or \schemecode{map}. They are important functional programming tools which are also found in many modern languages (sometimes under a different name)
+	
 	\begin{enumerate}
 		\item 	Try to guess / understand what each does based on the following examples:
 	
-	\begin{minted}{racket}
+	\begin{minted}{scheme}
 	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
 	
 	(map (lambda (x) (+ x 1)) mylist)
 	(apply + mylist)
 	(apply max mylist)
-	(foldl + 10 mylist)
 	\end{minted}
 
-	\item Re-implement  \schemecode{sum-cubes} in terms of \schemecode{map} and  \schemecode{apply}. You may also find the \schemecode{range} builtin useful.
+	\item Write a \schemecode{(range a b)} utility function which produces a list of all integers from $a$ to $b$, included. Then use this function to re-implement  \schemecode{sum-cubes} in terms of \schemecode{map} and  \schemecode{apply}.
 
 	\item Write a function which takes a list of lists and returns a list containing the maximum of each list.
-	\begin{minted}{racket}
+	\begin{minted}{scheme}
 	
 	(define listoflists '((1 2 3 1) (45 1 3 4 5) (4 5 64) 
 		(4 6) (144) (0 4 4) (14 464 4 7 6)))
@@ -91,6 +90,31 @@ The  \schemecode{lambda} expression creates an anonymous function which, to $x$ 
 	-> '(3 45 64 6 144 4 464)
 	\end{minted}
 	\end{enumerate}
+\end{instruction}
+
+Another common operation we might want to do on list is to \emph{accumulate} the result of a function over all the arguments of this list. In many languages, this function is called \schemecode{fold}. However, the \scheme standard does not define this function. 
+
+\begin{instruction}
+	Write an \schemecode{accumulate} function. This function will have the following interface :
+	\begin{minted}{scheme}
+	(accumulate init-value function list)
+	\end{minted}	
+	
+	And its value is the application of the two-parameter \schemecode{function} successively on all elements of \schemecode{list}, with the first parameter being the accumulated value so far, starting with \schemecode{init-value}. In other words, \schemecode{(accumulate x0 f '(l1 l2 ... ln))} should return
+	$$ f(l_n, f(l_{n-1}, ... \quad f(l_2, f(l_1, x_0))) $$
+	
+	For instance :
+	\begin{minted}{scheme}
+	(accumulate 1 * '(2 3 4))
+	> 24
+	
+	(accumulate 14 + '(2 3 4))
+	> 23
+	\end{minted}	
+	
+	Take care of the parameter order ($f(a,b)$ may not be equal to $f(b,a)$! Respect the order given above).
+	
+	Can you use this function to reverse a list? 
 \end{instruction}
 
 	
@@ -106,11 +130,38 @@ As said above, it is possible for a function to return a function (think for exa
 	
 	Use this function with the \schemecode{cube} function to generate a \schemecode{mean-cube} function. Then compute the mean-cube of 4 and 16.
 	
-	\begin{minted}{racket}
+	\begin{minted}{scheme}
 	(mean-cube 4 16)
 	-> 2080
 	\end{minted}
 	
+\end{instruction}
+
+\section{Special forms and parameter evaluation}
+
+From the syntax, it looks like \schemecode{if} in \scheme is just another function of three arguments: \schemecode{(if condition true-expr false-expr)}. However, we will see that there is a slight caveat to this approach and that, under the hood, things are a bit different.
+
+\begin{instruction}
+	Implement a \schemecode{(my-if condition true-expr false-expr)} function in terms of \schemecode{cond}. Try it with the following expressions:
+	
+	\begin{minted}{scheme}
+	(define x 4)
+	(my-if (positive? x) x (- x))
+	
+	(my-if (positive? x) 
+		(display "positive") 
+		(display "negative"))
+	\end{minted}
+\end{instruction}
+
+What goes on in your \schemecode{my-if} function is that the interpreter first evaluates \emph{all} the parameters passed to the the function. In the first example, this does not matter, because \schemecode{x} and \schemecode{(- x)} simply evaluate to 4 and -4, without any side-effects. But in the second example, both arguments have the side-effect of displaying some text on the output, and their evaluation produces \schemecode{#<void>} (this is an implementation choice in racket. The standard simply specifies that \schemecode{display}, returns ``an unspecified value''). In other words, both the true and false blocks are evaluated upon parameter passing, and the function call actually becomes \schemecode{(my-if #t #<void> #<void>)} and the \schemecode{display} have already printed out their arguments.  
+
+\subsection{Hygienic macros}
+
+Because of this, some constructs in \scheme are actually \emph{special forms} and not functions. In a special form, the arguments are only evaluated when called within the special form, and not when passed as arguments. It is possible to define your own special forms using \schemecode{define-syntax} and \schemecode{syntax-rules}. You can refer to the R5RS\footnote{\url{http://www.schemers.org/Documents/Standards/R5RS/}} for a reference, or some tutorials available online\footnote{See for instance \url{http://www.willdonnelly.net/blog/scheme-syntax-rules/}}.
+
+\begin{instruction}
+Rewrite \schemecode{my-if} using a hygienic macro. Do you observe the problem discovered above? 	
 \end{instruction}
 
 \end{document}
