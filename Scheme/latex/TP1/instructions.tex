@@ -10,35 +10,36 @@
 
 \section{Getting started}
 
-There have been many LISP dialects throughout history. For the purpose of this course, we will use one of the best-known of these dialects: \scheme. \scheme itself is language which is described in a standard called \emph{Revised\textsuperscript{n} Report on the Algorithmic Language Scheme (RnRS)\footnote{\url{http://www.schemers.org/Documents/Standards/R5RS/}}}, with $n$ the version number of the document. Although the document is still revised periodically to this day (with R7RS published in 2013), the most commonly implemented version of this standard is R5RS. 
+Many LISP dialects have been implemented throughout history. For the purpose of this course, we will use one of the best-known of these dialects: \scheme. \scheme is actually a language by itself, which is described in a standard called the \emph{Revised\ \textsuperscript{n} Report on the Algorithmic Language Scheme (RnRS)}, where $n$ is the version number of this document. Although the document is still being revised periodically to this day (with R7RS having been published in 2013), the most commonly implemented version of this standard is still R5RS\footnote{\url{http://www.schemers.org/Documents/Standards/R5RS/}}. 
 
-One general-purpose implementation is available in Racket\footnote{\url{https://racket-lang.org/}}. Racket is actually the name of a LISP dialect itself, but the racket programs allow to use both the Racket and \scheme R5RS dialects, as well as some other variants. The package provides a command-line interpreter as well as a GUI called DrRacket. In the GUI, you can write a script in the top panel. The bottom panel is an interpreter in which you can write expressions directly, or see the result of running the script typed in the top panel.
+One general-purpose implementation of (this standard of) \scheme is available in Racket\footnote{\url{https://racket-lang.org/}}. Racket is actually the name of a LISP dialect itself, but the Racket programming environment supports the use of both the Racket, R5RS and R6RS \scheme dialects, as well as some other variants. The Racket environment provides both a command-line interpreter as well as a GUI called DrRacket. In the GUI, you can write \scheme scripts or programs in the top panel. The bottom panel is an interpreter in which you can write expressions directly, or see the result of running the script or program typed in the top panel.
 
-Every source file in DrRacket should start with an expression of the form \schemecode{#lang language} where language tells the interpreter which dialect you want to use. In our case, we will mostly use \schemecode{#lang r5rs}. If you wish to use your own text editor, you can run your programs with \verb|racket -r myscript.scm|.
-
+Every source file in DrRacket should start with an expression of the form \schemecode{#lang language} where \schemecode{language} tells the interpreter which dialect of \scheme you want to use. As mentioned above, for our practical sessions we will mostly use \schemecode{#lang r5rs}. If you prefer to use your own text editor rather than the one provided by DrRacket, you can run your \scheme programs by executing the command \verb|racket -r myscript.scm|.
 
 \section{The basics}
 
-\scheme uses prefix notation. This means that applying a function $f$ to two arguments $x$ and $y$ is done with the following:
+\scheme uses prefix notation. This means that applying a function $f$ to two arguments $x$ and $y$ is written as follows:
 
 \begin{minted}{racket}
 	(f x y)
 \end{minted}
 
-For instance, to compute $2 * (14 + 17)$, you will write:
+For instance, to compute $2 * (14 + 17)$, you need to write:
 
 \begin{minted}{racket}
 	(* 2 (+ 14 17))
 \end{minted}
 
+This may require a bit of getting used to, but you'll soon get the hang of this, don't worry. After all, it's only syntax.
+
 \begin{instruction}
 
-Write and evaluate the following expression in \scheme :
+Write and evaluate the following expression in \scheme. (Hint: the \scheme function to calculate the square root is \schemecode{sqrt}.)
 
 $$\frac{(134 + 121) * \frac{74}{\sqrt{8}}}{ 97.1 - \frac{exp(7)}{78 * 71} } $$
 \end{instruction}
 
-Even flow control uses such a notation. For instance, an \verb|if| condition would be written as:
+Even control-flow statements use this prefix notation. For instance, an \verb|if| condition would be written as:
 
 \begin{minted}{racket}
 (if test-expr true-expr false-expr)
@@ -60,12 +61,12 @@ Even flow control uses such a notation. For instance, an \verb|if| condition wou
 	writeln(b)
 	\end{minted}
 	
-	You can start from the following skeleton to get you started:
+	To get you started, you can start from the following code skeleton:
 	
 	\begin{minted}{scheme}
 	(define a -8)
 	(define b ... )
-	(writeln b)     
+	(display b)     
 	\end{minted}
 	
 \end{instruction}
@@ -75,17 +76,17 @@ Even flow control uses such a notation. For instance, an \verb|if| condition wou
 
 \section{Lists}
 
-\scheme is a dialect of LISP, which stands for \emph{List Processor} and lists are at the core of LISP languages. They are the main data structure and the language is designed to manipulate them in many ways, and use them to define more complex data structures.
+\scheme is a dialect of LISP, which stands for \emph{List Processor}. Lists are at the core of all LISP language dialects. They are the main data structure and the language is designed to efficiently manipulate lists in many ways, and to use them to define more complex data structures.
 
-The basic building blocks of \scheme are \emph{atoms}. They can be numbers, symbols (\schemecode{'a}, \schemecode{'mysymbol}), characters (\schemecode{#\a}, \schemecode{#\Z}), booleans (\schemecode{#t} and \schemecode{#f} for true and false),... 
+The basic building blocks of \scheme are \emph{atoms}. They can be numbers (\schemecode{1}, \schemecode{1.3}, \schemecode{1/3}, \schemecode{1e3}, \ldots), symbols (\schemecode{'a}, \schemecode{'mysymbol}, \schemecode{'*}, \ldots), characters (\schemecode{#\a}, \schemecode{#\Z}, \schemecode{#\(}, \schemecode{#\space}, \schemecode{#\newline}), booleans (\schemecode{#t} and \schemecode{#f} for true and false), \ldots 
 
-Atoms can be combined together with the \schemecode{cons} function to form a \emph{pair}. This function takes two argument and returns a pair, in the which the first item is the first argument and the second item is the second argument. The \scheme interpreter will write a pair as:
+Atoms can be combined together with the \schemecode{cons} function to form a \emph{pair}. This constructor function takes two argument and returns a pair, of the which the first item is the first argument and the second item is the second argument. After evaluation, the \scheme interpreter will write a pair \schemecode{(cons 'a  'b)} as:
 
 \begin{minted}{scheme}
 	(a . b)
 \end{minted}
 
-Given a pair, obtaining the first and second elements of the pair can be done with the infamous \car and \cdr functions.
+Once a pair has been constructed, retrieving its first and second elements again can be done through the infamous \car and \cdr functions. (The names of \car and \cdr are historical since Lisp was originally implemented on the IBM 704 computer in the late 1950s, where \car was used to retrieve the contents address of a register and \cdr was used to retrieve the contents decrement register. As a mnemonic device to remember which one retrieves the first value and which one retrieves the second, just remember that the letter ``a'' precedes the letter ``d'' in the alphabet.)
 
 \begin{minted}{scheme}
 (define mypair (cons 'a  'b))
@@ -93,37 +94,44 @@ Given a pair, obtaining the first and second elements of the pair can be done wi
 (cdr mypair)	; -> Returns the symbol 'b
 \end{minted}
 
+A \emph{list} is a special kind of pair (created with \schemecode{cons}), in which the second element (the \cdr) is either another list or the empty list \schemecode{'()}. For instance, the code below defines a list with one element:
 
-A \emph{list} is a pair, in which the second element (the \cdr) is a list or the constant \schemecode{null} (also written \schemecode{'()}). For instance, this defines a list :
+\begin{minted}{scheme}
+(define mylist (cons 'a  '()))
+(list? mylist) 	; -> returns #t, true
+\end{minted}
 
+The empty list \schemecode{null} or \schemecode{'()} is also considered as a list:
 \begin{minted}{scheme}
 (define mylist (cons 'a  null))
 (list? mylist) 	; -> returns #t, true
 \end{minted}
 
-You can see that a list has a recursive definition : a list is a pair where the second element is a list. The empty list \schemecode{'()} gives us a base case from which to build lists. \scheme provides facilities to build lists straightaway more easily than using multiple \schemecode{cons}. For example, both of these lines define valid lists:
+In the definition above you can already see that a list has a recursive definition: a list is a pair where the second element is again a list. The empty list \schemecode{'()} gives us a base case from which to build lists. \scheme provides facilities to build lists straightaway more easily than using multiple \schemecode{cons}. For example, each of the lines below define valid lists:
 
 \begin{minted}{scheme}
-'(22 21 23 #f 45 0 'a  "lists can have heterogeneous elements")
+(cons 'a (cons 'b (cons 'c (cons 'd '()))))
+
+'(22 21 23 #f 45 0 'dog  "lists can have heterogeneous elements")
 
 (list 1 2 3 4 "A cat is fine too")
 \end{minted}
 
-\textbf{Attention:} because \scheme uses mutable lists and racket uses immutable lists (we will talk about list mutability in a following session). For this reason, when using the R5RS standard, racket will sometimes show lists like this
+\textbf{Warning:} Because the \scheme language uses mutable lists but Racket uses immutable lists (we will talk about list mutability in a following session), when using the R5RS standard, Racket will often show lists like this:
 
 \begin{minted}{scheme}
 (list 1 2 3)
 -> (mcons 1 (mcons 2 (mcons 3 '())))
 \end{minted}
 
-This is because racket uses \schemecode{mcons} instead of \schemecode{cons} for mutable lists. To avoid this problem, always use the \schemecode{display} function to print out lists.
+This is because racket uses \schemecode{mcons} instead of \schemecode{cons} to construct mutable lists. To avoid this problem, always use the \schemecode{display} function to print out lists.
 
 \begin{instruction}
-Try to guess the value of the following expressions. Then verify your answer in racket.
+Try to guess the value of the following expressions. Then verify your answer in Racket, using \schemecode{display} to print your results.
 
 \begin{minted}{scheme}
 	(cons 1 (cons 2 (cons 3 (cons 4 '() ))))
-	(car (cons 1 (cons 2 '()))
+	(car (cons 1 (cons 2 '())))
 	(car (cdr (list 1 2 3 4)))
 	
 	(cadr '(1 2 3))
@@ -151,9 +159,9 @@ What is the difference between these two objects?
 
 \section{Functions}
 
-\scheme follows the functional programming paradigm. In the next session, we will see what this means and how functions in \scheme can be passed around and manipulated as first order items.
+\scheme adheres to the functional programming paradigm. In the next session, we will see what this means exactly and how functions in \scheme can even be passed around and manipulated as first-class items.
 
-For now, we will just explore the basic syntax to define functions in \scheme and how many problems in \scheme are defined recursively. Look at the following example then try to implement some more complex functions listed below.
+For now, we will just explore the basic syntax to define functions in \scheme and how many problems in \scheme can be defined elegantly in a recursive way. First look at the following trivial example of a function definition, then try to implement some of the more complex functions listed below.
 
 \begin{minted}{scheme}
 	(define (cube x) (* x x x))
@@ -167,7 +175,7 @@ For now, we will just explore the basic syntax to define functions in \scheme an
 
 
 \begin{instruction}
-	Write a function \schemecode{sum-cubes} of two integer arguments $a$ and $b$ ($a < b$) which computes the sum of cubes of the integers in $\{a, a+1, ...,  b\}$. For instance \schemecode{(sum-cubes 0 3)} should return 36 ($0^3 + 1^3 + 2^3 + 3^3 = 36$).
+Write a function \schemecode{sum-cubes} of two integer arguments $a$ and $b$ ($a < b$) which computes the sum of cubes of the integers in the interval $\{a, a+1, ...,  b\}$. For instance, \schemecode{(sum-cubes 0 3)} should return 36 ($0^3 + 1^3 + 2^3 + 3^3 = 36$).
 	
 	Hint: $sumCubes(a,b) = a^3 + sumCubes(a+1, b)$
 	
@@ -182,7 +190,7 @@ For now, we will just explore the basic syntax to define functions in \scheme an
 
 \begin{instruction}	
 	
-	Write a recursive function \schemecode{collatz?} which checks the Collatz conjecture for an integer $n$. Print all the steps of the check along the way (use  \schemecode{writeln} for instance). Remember from the previous weeks that the Collatz conjecture states that the following process converges to 1:
+Write a recursive function \schemecode{collatz?} which checks the Collatz conjecture for a given integer $n$. Print all the steps of the check along the way (use \schemecode{writeln} for instance). Remember from the previous practical sessions that the Collatz conjecture states that the following process always converges to 1:
 	
 		\begin{equation*}
 		f(n) = 
@@ -192,45 +200,50 @@ For now, we will just explore the basic syntax to define functions in \scheme an
 		\end{cases}
 		\end{equation*}
 	
-	Hints: You may find the \schemecode{begin} and \schemecode{cond} builtins useful. \scheme also has the  \schemecode{even?} and \schemecode{odd?} predicates built-in. As a side-exercise, can you define versions of these predicates yourself?
+Hint: You may find the built-in \scheme functions \schemecode{cond}, \schemecode{even?} and \schemecode{odd?} useful. As a side-exercise, could you define versions of the \schemecode{even?} and \schemecode{odd?} predicates yourself?
 \end{instruction}
 
 
 \subsection{Tail recursion}
 
-\scheme implements tail-recursion. To put it in simple words, tail-recursion occurs whenever a recursive function calls is located at the end of the function: in this situation, the control does not need to go back to the caller function to the callee, because there is nothing left to execute in the caller function. Because of this, the recursive calls can actually be implemented as a loop under the hood, avoiding the performance issues that recursive functions can suffer (filling up the call stack). See the racket doc\footnote{\url{https://docs.racket-lang.org/guide/Lists\_\_Iteration\_\_and\_Recursion.html\#\%28part._tail-recursion\%29}} and the R5RS section 3.5 for more details about tail recursion.
+The \scheme language implements tail-recursion. To put it simply, tail-recursion occurs whenever a recursive function call is located at the end of the function: in this situation, the control does not need to go back from the called function to the caller, because there is nothing left to execute in the caller. Because of this, such recursive calls can actually be compiled as a loop under the hood, avoiding some of the performance issues that recursive functions typically suffer from (filling up the call stack). See the Racket doc\footnote{\url{https://docs.racket-lang.org/guide/Lists\_\_Iteration\_\_and\_Recursion.html\#\%28part._tail-recursion\%29}} and the R5RS section 3.5 for more details on tail recursion.
 
 \begin{instruction}
-Is the \schemecode{sum-cubes} function you implemented above tail-recursive? Why? If not, can you make it tail-recursive?
+Is the \schemecode{sum-cubes} function you implemented above tail-recursive? Why (not)? If not, can you make it tail-recursive?\\
 
-Compare the performance difference between both implementations with:
+Hint: Accumulate the result along the way in an additional variable.\\
+
+Compare the performance difference between a non tail-recursive \schemecode{sum-cubes} and the tail-recursive implementation \schemecode{sum-cubes-tail} with:
 
 \begin{minted}{scheme}
 (time (sum-cubes 0 999999))
 (time (sum-cubes-tail 0 999999))
 \end{minted}
 
- 
-The \schemecode{time} function is not a \scheme primitive, but a Racket extension, so you will need to change your dialect to \schemecode{#lang racket} for this to run. Notice how racket handles big numbers naturally.
+Remark: The \schemecode{time} function is not a \scheme primitive, but a Racket extension, so you will need to change your dialect to \schemecode{#lang racket} for this to run. Notice how \scheme handles big numbers naturally through symbolic representation.
 \end{instruction}
 
 
 \subsection{Recursion on lists}
 
-Using the \car and \cdr primitives, you can access the head and tail of a list. With this mechanism available, it is easy to recursively scan a list. As always with recursion, you will first need to define a base case: with lists, this is often the case of the empty list \schemecode{'()}. Then, figure out how what should happen when recursing from this base case to the case of a one element list.
+Using the \car and \cdr primitives, you can access the head and tail of a list. With this mechanism available, it is easy to recursively scan a list. As always with recursion, you will first need to define a base case: with lists, this is often the case of the empty list \schemecode{'()}. Then, figure out how what should happen when recursing from this base case to the case of a list with one element.
 
 \begin{instruction}	
-	Write a function \schemecode{how-many} which takes a first argument $x$ and a second list argument $l$, and returns the occurrence count of $x$ in $l$. Example:
+	Write a function \schemecode{how-many} which takes a first argument $x$ and a second list argument $l$, and returns the occurrence count of $x$ in $l$. For example:
 	
 	\begin{minted}{racket}
 	(how-many 4 '(1 4 5 2 3 4 a b 4 4 c 4))
 	\end{minted}
 	
-	should return 5.
+	should return 5, because there are 5 occurrences of 4 in this list.
 \end{instruction}
 
 \begin{instruction}	
-	Write a function \schemecode{duplicate} which takes a list and returns the same list where every element has been duplicated. Example:
+	Is the \schemecode{how-many} function you implemented above tail-recursive? If not, can you make it tail-recursive?
+\end{instruction}
+
+\begin{instruction}	
+	Write a function \schemecode{duplicate} which takes a list and returns the same list where every element has been duplicated. For example:
 	
 	\begin{minted}{racket}
 	(duplicate '(Do duck quacks echo?))
