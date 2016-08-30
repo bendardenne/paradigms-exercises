@@ -29,7 +29,7 @@ cat(tom).
 In the third line you see that facts can also have arguments: this particular fact tells us about the link between two terms. 
 
 \begin{instruction}
-	Write facts which describe the following family tree in terms of \prologcode{father/2} and \prologcode{mother/2} and \schemecode{male/1} and \schemecode{female/1}. Names in bold indicate which member of the 
+	Write facts which describe the following family tree in terms of \prologcode{father/2} and \prologcode{mother/2} and \prologcode{male/1} and \prologcode{female/1}. Names in bold indicate which member of the 
 
 	
 \end{instruction}
@@ -103,11 +103,11 @@ List = [tom, student].
 A \emph{rule} allows us to use known facts to draw conclusions from our world. For example:
 
 \begin{minted}{prolog}
-cat(tom). 		 % this is a fact
-animal(X) :- cat(X).	% this is a rule: if X is a cat, X is an animal
+cat(tom).                 % this is a fact
+animal(X) :- cat(X).      % this is a rule: if X is a cat, X is an animal
 \end{minted}
 
-Would allow you to query for \schemecode{?- animal(tom)} and obtain true.
+Would allow you to query for \prologcode{?- animal(tom).} and obtain \prologcode{true}.
 
 
 \begin{instruction}
