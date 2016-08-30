@@ -17,6 +17,9 @@
 \usepackage{xspace}
 \usepackage{todonotes}
 
+\usepackage{tikz}
+\usetikzlibrary{trees}
+
 \newenvironment{instruction}%
 {\vspace{15pt}
 	\noindent\begin{Sbox}
@@ -45,6 +48,7 @@
 % Minted config
 \newmintinline[pascalcode]{pascal}{}
 \newmintinline[schemecode]{scheme}{}
+\newmintinline[prologcode]{prolog}{}
 
 \newcommand{\keyword}[2]{\expandafter\def\csname#2\endcsname
 	{\mintinline{#1}{#2}\xspace}}

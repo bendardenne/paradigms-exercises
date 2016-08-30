@@ -1,69 +1,69 @@
-% Oplossingen Oefeningensessie 1: Familierelaties
+% Oplossnadian Oefennadiansessie 1: Familierelaties
 % ==============================
 
 % Vraag 1
 % -------
 
-father(prosper,maria).
-father(prosper,jef).
-father(prosper,francois).
-father(prosper,josephine).
+father(george,maria).
+father(george,howard).
+father(george,roger).
+father(george,laura).
 father(albert,tamara).
 father(albert,alexandra).
-father(albert,winnie).
-father(francois,bram).
-father(francois,inge).
-father(charel,frank).
-father(charel,willem).
+father(albert,jessica).
+father(roger,brandon).
+father(roger,nadia).
+father(bob,frank).
+father(bob,anthony).
 
-mother(eufrasie,maria).
-mother(eufrasie,jef).
-mother(eufrasie,francois).
-mother(eufrasie,josephine).
+mother(cecilia,maria).
+mother(cecilia,howard).
+mother(cecilia,roger).
+mother(cecilia,laura).
 mother(maria,tamara).
 mother(maria,alexandra).
-mother(maria,winnie).
-mother(anita,bram).
-mother(anita,inge).
-mother(josephine,frank).
-mother(josephine,willem).
+mother(maria,jessica).
+mother(sarah,brandon).
+mother(sarah,nadia).
+mother(laura,frank).
+mother(laura,anthony).
 
-male(prosper).
+male(george).
 male(albert).
-male(francois).
-male(jef).
-male(charel).
-male(bram).
+male(roger).
+male(howard).
+male(bob).
+male(brandon).
 male(frank).
-male(willem).
+male(anthony).
 
-female(eufrasie).
+female(cecilia).
 female(maria).
-female(anita).
-female(josephine).
+female(sarah).
+female(laura).
 female(tamara).
 female(alexandra).
-female(winnie).
-female(inge).
+female(jessica).
+female(nadia).
 
 % Vraag 2
 % -------
 
-%  Query om na te gaan of prosper de vader is van tamara
+%  Query om na te gaan of george de vader is van tamara
 %
-%   father(prosper,tamara).
+%   father(george,tamara).
 
-%  Query om na te gaan of anita de moeder is van bram
+%  Query om na te gaan of sarah de moeder is van brandon
 %
-%   mother(anita,bram).
+%   mother(sarah,brandon).
 
-%  Query om alle kinderen van jef te zoeken
+%  Query om alle kinderen van howard te zoeken
 %
-%   father(jef,Child).
+%   father(howard,Child).
 
-%  Query om alle zoons (!) van francois te vinden
+%  Query om alle zoons (!) van roger te vinden
 %
-%   father(francois,Son),male(Son).
+%   father(roger,Son),male(Son).
 
 %  Query om te controleren of maria en albert alleen samen kinderen hebben
 %
@@ -126,11 +126,11 @@ uncle(Uncle,Person) :- brother(Uncle,Parent), parent(Parent,Person).
 % -------
 
 % deel (a)
-	parent(josephine,_).
+	parent(laura,_).
 
 % deel (b)
-%	Manier 1:	human(prosper).
-%				human(eufrasie).
+%	Manier 1:	human(george).
+%				human(cecilia).
 %				...
 %	Manier 2:	human(X).
 %
@@ -154,10 +154,10 @@ predecessor(X,Z) :- parent(X,Y), predecessor(Y,Z).
 % Vraag 7
 % -------
 
-marriedcouple(eufrasie,prosper).
+marriedcouple(cecilia,george).
 marriedcouple(maria,albert).
-marriedcouple(anita,francois).
-marriedcouple(josephine,charel).
+marriedcouple(sarah,roger).
+marriedcouple(laura,bob).
 
 motherinlaw(Motherinlaw,Soninlaw) :-
      marriedcouple(Wife,Soninlaw),

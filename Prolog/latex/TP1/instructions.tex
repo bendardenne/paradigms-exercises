@@ -1,0 +1,128 @@
+\documentclass{../../../tp}
+
+
+\title{Practical Session 6: \prolog}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\section{Getting started}
+
+\prolog is a logic programming language. There are many implementations of \prolog available. We will use SWI-Prolog\footnote{\url{http://www.swi-prolog.org/}}
+
+Logic programming has 3 kinds of statements: \emph{facts}, \emph{rules} and \emph{queries}. 
+\todo{a finir}
+
+\section{Facts}
+
+\prolog must be fed facts, which are statements which we know are true. They will be the basis  of our programs. A fact start with a lowercase and end with a period :
+
+\begin{minted}{prolog}
+prolog_is_simple.
+life_is_beautiful.
+likes(student, prolog).
+cat(tom).
+\end{minted}
+
+In the third line you see that facts can also have arguments: this particular fact tells us about the link between two terms. 
+
+\begin{instruction}
+	Write facts which describe the following family tree in terms of \prologcode{father/2} and \prologcode{mother/2} and \schemecode{male/1} and \schemecode{female/1}. Names in bold indicate which member of the 
+
+	
+\end{instruction}
+
+	
+	\begin{figure}[h]
+		\begin{tikzpicture}[level 1/.style={sibling distance=2.5cm},level 2/.style={sibling distance=1.5cm}]
+		\node {george + cecilia}[edge from parent fork down]
+		child { node  {\underline{maria} + albert}
+			child {node {tamara}}
+			child {node {alexandra}}
+			child {node {jessica}} }
+		child { node {howard}}
+		child { node {\underline{roger} + sarah}
+			child{node {brandon}}
+			child{node {nadia}}}
+		child { node {\underline{laura} + bob}
+			child {node {frank}}
+			child {node {anthony}}}
+		;
+		\end{tikzpicture}
+	\end{figure}
+
+
+\section{Queries}
+ 
+Once you have fed \prolog some facts, you can start asking it some queries. For instance :
+
+\begin{minted}{prolog}
+?- likes(student, prolog).
+true.
+\end{minted}
+
+The \prologcode{?-} denotes the \prolog shell. In the shell, you can only ask queries. You cannot state new facts within the shell. Of course, you can do more than just querying facts as they were given explicitly. For instance, you could wish to know who likes \prolog. In this case, you whould use a variable, which is indicated by a capitalized first letter :
+
+\begin{minted}{prolog}
+?- likes(Who, prolog).
+Who = student.
+\end{minted}
+
+In \prolog a comma \prologcode{,} denotes a logical \emph{and} whereas a semi-colon denotes a logical \emph{or}. You therefore query for all creatures who are cats or like prolog for instance:
+
+\begin{minted}{prolog}
+?- cat(Who);likes(Who, prolog).
+Who = tom ;
+Who = student.
+\end{minted}
+
+In this case there are two possible answers. You can use tab to obtain them successively. The \prolog{findall} predicate is also useful to obtain all possible answers:
+
+\begin{minted}{prolog}
+?- findall(Creature, cat(Creature);likes(Creature,prolog),List).
+List = [tom, student].
+\end{minted}
+
+
+\begin{instruction}
+	Write some queries to :
+	\begin{itemize}
+		\item know if George is the father of Tamara
+		\item know if Anita is the mother of Brandon
+		\item get all the children of Maria
+		\item get all the sons of Roger
+		\item check that Maria and Albert only have children together (use 2 \prologcode{findall}'s)
+		\item check that all fathers are male and all mothers are female (without checking this for every known person individually of course)
+	\end{itemize}
+\end{instruction}
+
+\section{Rules}
+
+A \emph{rule} allows us to use known facts to draw conclusions from our world. For example:
+
+\begin{minted}{prolog}
+cat(tom). 		 % this is a fact
+animal(X) :- cat(X).	% this is a rule: if X is a cat, X is an animal
+\end{minted}
+
+Would allow you to query for \schemecode{?- animal(tom)} and obtain true.
+
+
+\begin{instruction}
+	Write rules to describe the following relationships:
+	\begin{itemize}
+	 \item \prologcode{parent(Parent,Child)}
+	 \item \prologcode{son(Son,Parent)}
+	 \item \prologcode{daughter(Daughter,Parent)}
+	 \item \prologcode{grandfather(Grandfather,Grandchild)}
+	 \item \prologcode{grandparent(Grandparent,Grandchild)}
+	 \item \prologcode{brother(Brother,Sibling)}
+	 \item \prologcode{sibling(Sibling1,Sibling2)}
+	 \item \prologcode{havechildrentogether(Person1,Person2)}
+	 \item \prologcode{uncle(Uncle,Person)}
+	\end{itemize}
+\end{instruction}
+
+\end{document}
