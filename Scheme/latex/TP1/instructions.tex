@@ -80,7 +80,7 @@ Even control-flow statements use this prefix notation. For instance, an \verb|if
 
 The basic building blocks of \scheme are \emph{atoms}. They can be numbers (\schemecode{1}, \schemecode{1.3}, \schemecode{1/3}, \schemecode{1e3}, \ldots), symbols (\schemecode{'a}, \schemecode{'mysymbol}, \schemecode{'*}, \ldots), characters (\schemecode{#\a}, \schemecode{#\Z}, \schemecode{#\(}, \schemecode{#\space}, \schemecode{#\newline}), booleans (\schemecode{#t} and \schemecode{#f} for true and false), \ldots 
 
-Atoms can be combined together with the \schemecode{cons} function to form a \emph{pair}. This constructor function takes two argument and returns a pair, of the which the first item is the first argument and the second item is the second argument. After evaluation, the \scheme interpreter will write a pair \schemecode{(cons 'a  'b)} as:
+Atoms can be combined together with the \schemecode{cons} function to form a \emph{pair}. This constructor function takes two argument and returns a pair, of which the first item is the first argument and the second item is the second argument. After evaluation, the \scheme interpreter will write a pair \schemecode{(cons 'a  'b)} as:
 
 \begin{minted}{scheme}
 	(a . b)

@@ -102,18 +102,18 @@ Modern functional languages emphasize the immutability of data: once a data stru
 	Think about \schemecode{map} for instance. In \scheme, what happens to \schemecode{mylist} after evaluating these two expressions?
 	
 	\begin{minted}{scheme}
-		(define (mylist (list 1 2 4 2 57 9 .1 3 12 -75)))
-		(map (lambda (x) (/ (sqrt x) x)) mylist)
+	(define (mylist (list 1 2 4 2 57 9 .1 3 12 -75)))
+	(map (lambda (x) (/ (sqrt x) x)) mylist)
 	\end{minted}
 
 \end{instruction}
 
 The main advantage (among others) of immutable data structures is that they are inherently thread-safe. They avoid many problems and make it easier to understand the code, keep it consistent even when exceptions occur, and make it easy to parallelize. 
 
-But \scheme actually provides mutable data structures. You may have noticed that when you tell racket to use the R5RS standard, it will display lists as a series of \schemecode{mcons} constructs. This is because of the internal implementation of the \scheme standard in racket: the racket language prevents mutable lists by default, and lists built with \schemecode{cons} in the racket language cannot be modified in memory later on. However, it provides special functions to use, when the user specifically wants to have mutability: \schemecode{mcons, mcar, mcdr}. But because in \scheme lists are mutable by default, the \scheme \schemecode{cons} actually corresponds to racket's \schemecode{mcons}, which is why there is some confusion.
+But \scheme's data structures are actually mutable. You may have noticed that when you tell racket to use the R5RS standard, it will display lists as a series of \schemecode{mcons} constructs. This is because of the internal implementation of the \scheme standard in racket: the racket language prevents mutable lists by default, and lists built with \schemecode{cons} in the racket language cannot be modified in memory later on. However, it provides special functions to use, when the user specifically wants to have mutability: \schemecode{mcons, mcar, mcdr}. And because pure \scheme (unlike racket) has mutable lists by default, the \scheme \schemecode{cons} actually corresponds to racket's \schemecode{mcons}, which is why there is some confusion.
 
 \begin{instruction}
-	We will play around with mutable lists in \scheme.
+	We will play around with mutable lists in \scheme (don't forget to use \schemecode{#lang r5rs}).
 
 	\begin{minted}{scheme}
 	(define mutable (list 1 2 4 2 57 9 .1 3 12 -75))
@@ -134,9 +134,38 @@ But \scheme actually provides mutable data structures. You may have noticed that
 	(set-car! (cdddr mutable) 'can)
 	 \end{minted}
 	 
-	 What is the value of \schemecode{immutable} here? What happened?	
+	 What is the value of \schemecode{immutable} now? What happened? 	
+\end{instruction}
+
+\begin{instruction}
+	Write an \schemecode{append! x y} function which appends list \schemecode{y} to \schemecode{x}, changing the actual structure of \schemecode{x} in memory (it is a good \scheme practice to suffix functions which mutate some or all of their inputs with a \schemecode{!}).  
 \end{instruction}
 
 
+\begin{instruction}
+	
+	Consider the following \schemecode{mystery} function. Can you guess what it does without evaluating it? 
+	
+	\begin{minted}{scheme}
+	(define (mystery x)
+	   (define (loop x y)
+	      (if (null? x)
+	         y
+	         (let ((temp (cdr x)))
+	            (set-cdr! x y)
+	            (loop temp x))))
+	   (loop x '()))
+	\end{minted}
+	
+	Assume we have two lists:
+	
+	\begin{minted}{scheme}
+	(define v '(a b c d))
+	(define w (mystery v))
+	\end{minted}
+	
+	What does \schemecode{w} look like? What has \schemecode{v} become? Why?
+	
+\end{instruction}
 
 \end{document}

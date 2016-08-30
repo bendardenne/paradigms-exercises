@@ -115,6 +115,8 @@ Another common operation we might want to do on list is to \emph{accumulate} the
 	Take care of the parameter order ($f(a,b)$ may not be equal to $f(b,a)$! Respect the order given above).
 	
 	Can you use this function to reverse a list? 
+	
+	Why can you not easily use this function to implement your \schemecode{collatz} function of the previous weeks? 
 \end{instruction}
 
 	
@@ -158,7 +160,7 @@ What goes on in your \schemecode{my-if} function is that the interpreter first e
 
 \subsection{Hygienic macros}
 
-Because of this, some constructs in \scheme are actually \emph{special forms} and not functions. In a special form, the arguments are only evaluated when called within the special form, and not when passed as arguments. It is possible to define your own special forms using \schemecode{define-syntax} and \schemecode{syntax-rules}. You can refer to the R5RS\footnote{\url{http://www.schemers.org/Documents/Standards/R5RS/}} for a reference, or some tutorials available online\footnote{See for instance \url{http://www.willdonnelly.net/blog/scheme-syntax-rules/}}.
+Because of this, some constructs in \scheme are actually \emph{special forms} and not functions. In a special form, the arguments are only evaluated when called within the special form, and not when passed as arguments. It is possible to define your own special forms using \schemecode{define-syntax} and \schemecode{syntax-rules}. You can refer to the R5RS\footnote{\url{http://www.schemers.org/Documents/Standards/R5RS/}} for a reference, or some tutorials available online\footnote{See for instance \url{http://www.willdonnelly.net/blog/scheme-syntax-rules/}} for help on how to use these constrcuts.
 
 \begin{instruction}
 Rewrite \schemecode{my-if} using a hygienic macro. Do you observe the problem discovered above? 	
