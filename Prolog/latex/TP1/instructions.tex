@@ -70,7 +70,7 @@ The \prologcode{?-} denotes the \prolog shell. In the shell, you can only ask qu
 Who = student.
 \end{minted}
 
-In \prolog a comma \prologcode{,} denotes a logical \emph{and} whereas a semi-colon denotes a logical \emph{or}. You therefore query for all creatures who are cats or like prolog for instance:
+In \prolog a comma \prologcode{,} denotes a logical \emph{and} whereas a semi-colon denotes a logical \emph{or}. You can therefore query for all creatures who are cats or like prolog for instance:
 
 \begin{minted}{prolog}
 ?- cat(Who);likes(Who, prolog).
@@ -78,7 +78,7 @@ Who = tom ;
 Who = student.
 \end{minted}
 
-In this case there are two possible answers. You can use tab to obtain them successively. The \prolog{findall} predicate is also useful to obtain all possible answers:
+In this case there are two possible answers. You can use tab to obtain them successively. The \prologcode{findall} predicate is also useful to obtain all possible answers:
 
 \begin{minted}{prolog}
 ?- findall(Creature, cat(Creature);likes(Creature,prolog),List).
@@ -123,6 +123,32 @@ Would allow you to query for \prologcode{?- animal(tom).} and obtain \prologcode
 	 \item \prologcode{havechildrentogether(Person1,Person2)}
 	 \item \prologcode{uncle(Uncle,Person)}
 	\end{itemize}
+	
+	Take care that we do not want for someone to be their own brother for instance.
+\end{instruction}
+
+\section{Anonymous variables}
+
+The underscore character can be used to in place of variables when we are not interested in their value. This character will basically match anything, but each use will be considered a different variable, so you cannot do for instance:
+
+\begin{minted}{prolog}
+	grandparent (X, Z) :- parent (X, _), parent (_, Z).
+\end{minted}
+
+\begin{instruction}
+	Use the underscore wildcard to:
+	\begin{itemize}
+		\item determine whether Laura has one child
+		\item add a \prologcode{human/1} predicate so that \emph{everyone} is a human. Can you also do this without the underscore?
+		\item define a \prologcode{isparent/1} predicate that checks whether a person as at least one child. 
+	\end{itemize}
+\end{instruction} 
+
+
+\section{Recursive rules}
+
+\begin{instruction}
+	Write a rule to describe to \prologcode{ancestor} relationship. Hint: someone is an ancestor of someone if their are their direct parent, of if their are the direct parent of one of their ancestors.
 \end{instruction}
 
 \end{document}

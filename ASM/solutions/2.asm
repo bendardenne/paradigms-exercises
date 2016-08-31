@@ -21,6 +21,7 @@ positive:
 ; EAX and EBX must be unchanged after the operation.
 
 PUSH EBX
+MOV EDX, 0
 write: 
 	MOV [EBX], EDX 
 	INC EDX
