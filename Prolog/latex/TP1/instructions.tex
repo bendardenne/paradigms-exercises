@@ -22,16 +22,20 @@ Logic programming has 3 kinds of statements: \emph{facts}, \emph{rules} and \emp
 \begin{minted}{prolog}
 prolog_is_simple.
 life_is_beautiful.
-likes(student, prolog).
-cat(tom).
+father(george, maria).
+male(george).
 \end{minted}
 
-In the third line you see that facts can also have arguments: this particular fact tells us about the link between two terms. 
+In the third and fourth lines you see that facts can also have arguments: this particular fact tells us about the link between two terms, i.e. George is Maria's father and George is a male. 
 
 \begin{instruction}
-	Write facts which describe the following family tree in terms of \prologcode{father/2} and \prologcode{mother/2} and \prologcode{male/1} and \prologcode{female/1}. Names in bold indicate which member of the 
-
+	Try to write some facts above the following family tree in terms of \prologcode{father/2} and \prologcode{mother/2}:
 	
+	\begin{itemize}
+		\item Maria is Alexandra's mother
+		\item Roger is Nadias's mother
+		\item Laura is Anthony's mother
+	\end{itemize} 
 \end{instruction}
 
 	
@@ -53,38 +57,80 @@ In the third line you see that facts can also have arguments: this particular fa
 		\end{tikzpicture}
 	\end{figure}
 
+The provided \verb|family.pl| file lists facts which define this family tree. In the \prolog shell, you can use
 
+\begin{minted}{prolog}
+	consult("family.pl").
+\end{minted} 
+
+to load these facts into the logic engine.
+
+\section{Logical variables and Unification}
+
+In \prolog, objects starting with a capital letter are \emph{logical variables}. These are not variables in the sense you usually mean in other programming languages: they are not a label to some place where you can store data, but they are rather just placeholders for values which are not yet known, like a mathematical variable. Once their value is learnt, it will not change within a clause. A variable can be either free, bound to a term (\prologcode{X = 5.}) or aliased to another variable (\prologcode{X = Y.}).
+
+\prolog uses pattern matching to define equality. For instance: 
+
+\begin{minted}{prolog}
+?- X = X.
+true.
+
+?- 9 + 5 = 14.
+false.
+
+?- father(george,maria) = father(george,maria).
+true.
+
+?- father(george,maria) = father(george,howard).
+false
+\end{minted} 
+
+No evaluation is performed on the members, they are simply defined as equals if their structures match. \prolog can also \emph{unify} terms: two terms can be unified if it possible to instantiate their variables in a way that both terms are equal. For example:
+
+
+\begin{minted}{prolog}
+?- father(X,maria) = father(george, Y).
+X = george,
+Y = maria.
+\end{minted} 
+
+The terms \prologcode{father(X, maria)} \emph{unifies} with \prologcode{father(george, Y)} when \prologcod{X = george} and \prologcode{Y = maria}. Or 
+ 
 \section{Queries}
  
 Once you have fed \prolog some facts, you can start asking it some queries. For instance :
 
 \begin{minted}{prolog}
-?- likes(student, prolog).
+?- father(george, maria).
 true.
 \end{minted}
 
-The \prologcode{?-} denotes the \prolog shell. In the shell, you can only ask queries. You cannot state new facts within the shell. Of course, you can do more than just querying facts as they were given explicitly. For instance, you could wish to know who likes \prolog. In this case, you whould use a variable, which is indicated by a capitalized first letter :
+The \prologcode{?-} denotes the \prolog shell. Of course, you can do more than just querying facts as they were given explicitly. For instance, you could wish to know is Maria's father:
 
 \begin{minted}{prolog}
-?- likes(Who, prolog).
-Who = student.
+?- father(Who, maria).
+Who = george.
 \end{minted}
 
-In \prolog a comma \prologcode{,} denotes a logical \emph{and} whereas a semi-colon denotes a logical \emph{or}. You can therefore query for all creatures who are cats or like prolog for instance:
+In \prolog a comma \prologcode{,} denotes a logical \emph{and} whereas a semi-colon denotes a logical \emph{or}. You can therefore query for all people who are male or are the children of George for instance:
 
 \begin{minted}{prolog}
-?- cat(Who);likes(Who, prolog).
-Who = tom ;
-Who = student.
+?- male(Who);father(george, Who)
 \end{minted}
 
-In this case there are two possible answers. You can use tab to obtain them successively. The \prologcode{findall} predicate is also useful to obtain all possible answers:
+In this case there are many possible answers: depending on the implementation, you can use the space or tab key to obtain more results and the return key to stop getting results. \prolog has multiple useful built-in predicates to handle these cases, like the \prologcode{findall} and \prolog{forall} predicates. The \prologcode{findall} predicate will return all possible answers as a list. For instance, to get all people who are fathers of someone:
 
 \begin{minted}{prolog}
-?- findall(Creature, cat(Creature);likes(Creature,prolog),List).
-List = [tom, student].
+?- findall(Father, father(Father,X), List).
 \end{minted}
 
+Whereas \prologcode{forall} does not provide the list of items the satisfy the query, but rather checks whether all provided items can satisfy the given query or not :
+
+\begin{minted}{prolog}
+?- forall(father(albert,X), mother(maria, X)).
+\end{minted}
+
+Will tell you whether all people who have Albert as father, also have Maria as mother.
 
 \begin{instruction}
 	Write some queries to :
@@ -93,7 +139,7 @@ List = [tom, student].
 		\item know if Anita is the mother of Brandon
 		\item get all the children of Maria
 		\item get all the sons of Roger
-		\item check that Maria and Albert only have children together (use 2 \prologcode{findall}'s)
+		\item check that Maria and Albert only have children together
 		\item check that all fathers are male and all mothers are female (without checking this for every known person individually of course)
 	\end{itemize}
 \end{instruction}
@@ -103,11 +149,11 @@ List = [tom, student].
 A \emph{rule} allows us to use known facts to draw conclusions from our world. For example:
 
 \begin{minted}{prolog}
-cat(tom).                 % this is a fact
-animal(X) :- cat(X).      % this is a rule: if X is a cat, X is an animal
+male(george).             % this is a fact
+human(X) :- male(X).      % this is a rule: if X is a male, X is human
 \end{minted}
 
-Would allow you to query for \prologcode{?- animal(tom).} and obtain \prologcode{true}.
+Would allow you to query for \prologcode{?- human(george).} and obtain \prologcode{true}.
 
 
 \begin{instruction}
@@ -135,6 +181,8 @@ The underscore character can be used to in place of variables when we are not in
 	grandparent (X, Z) :- parent (X, _), parent (_, Z).
 \end{minted}
 
+because under the hood, each \prologcode{_} will be bound to a new distinct variable called \prologcode{_1}, \prologcode{_2}, \prologcode{_3} and so on, which means each \prologcode{_} is internally a different variable, like \prologcode{X} and \prologcode{Z} are different variables.
+
 \begin{instruction}
 	Use the underscore wildcard to:
 	\begin{itemize}
@@ -147,8 +195,10 @@ The underscore character can be used to in place of variables when we are not in
 
 \section{Recursive rules}
 
+It is possible (and powerful) to write recursive rules: rules which reduce the deduction to a base case, like for instance the \prologcode{ancestor} rule: someone is an ancestor of someone else if their are their direct parent, of if their are the direct parent of one of their ancestors. But beware that the base case of the recursion must be specified first, lest the logic engine go into an endless loop!
+
 \begin{instruction}
-	Write a rule to describe to \prologcode{ancestor} relationship. Hint: someone is an ancestor of someone if their are their direct parent, of if their are the direct parent of one of their ancestors.
+	Write a rule to describe the \prologcode{ancestor/2} relationship.
 \end{instruction}
 
 \end{document}
