@@ -1,4 +1,3 @@
-
 %%%%%%%%%%%%%%%%
 %% 2. QUERIES %%
 %%%%%%%%%%%%%%%%
@@ -86,7 +85,7 @@ isparent(Person) :- parent(Person,_).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-%% 5. RECUSRIVE RULES %%
+%% 5. RECURSIVE RULES %%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 

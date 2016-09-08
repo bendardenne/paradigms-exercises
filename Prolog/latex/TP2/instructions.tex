@@ -10,12 +10,37 @@
 
 \section{Caching}
 
-Fibo assert
+In most \prolog implementations, some predicates exist to add facts and rules dynamically. For instance, if you type in the shell
+
+\begin{lstlisting}[language=prolog]
+?- assert(brother(joe, averell)).
+\end{lstlisting}
+
+the given fact is added to the knowledge base. You can also use \prologcode{asserta} and \prologcode{assertz} to ensure that the facts are inserted in the first or last position. The opposite predicate is \prologcode{abolish}, to remove facts or rules from the knowledge base.
+
+\begin{instruction}
+	Implement a Fibonacci function by simply applying the recursive definition:
 	
-\section{is}	
+	$$fib(n) = \begin{cases}
+	1 & \textrm{if $n = 0$ or $n = 1$} \\
+	fib(n-1) + fib(n-2)  & \textrm{if $n > 1$}
+	\end{cases}$$
+	
+	Use caching to write a second version of this program: computed values of the Fibonacci series are added to the knowledge base directly as they are computed. 
+	
+	You will need to tell SWI that your new \prologcode{fib2} predicate can be dynamically modified. Add the following line to your script file:
+	
+	\begin{lstlisting}[language=prolog]
+	:- dynamic fib2/2.
+	\end{lstlisting} 
+	
+	This second version should be able to compute $fib(n)$ for much larger values of $n$ (50000 for instance). 
+\end{instruction}
+	
+\section{The \prologcode{is} predicate}	
 
 We have seen that arithmetic expressions are not necessarily evaluated directly. This is where the \prologcode{is} predicate comes into play. 
-The predicate
+The predicate:
 
 \begin{lstlisting}[language=prolog]
 	Number is Expr
@@ -25,13 +50,33 @@ is \prologcode{true} whenever \prologcode{Expr} evaluates to \prologcode{Number}
 
 
 \begin{instruction}
-	Write a \prologcode{power(X, N, Z)} procedure to compute $Z = X^N$. 
+	Try to evaluate the following expressions in the \prolog shell, understand the result, and try to grasp the difference between \prologcode{=} and \prologcode{is}: 
 	
+	\begin{lstlisting}[language=prolog]
+	X is 3 + 5
+	8 is 3 + 5
+	8 is 3 + X
+	X is 3 + Y
+	Y is 5, X is 3 + Y
+	X is 8, X is 3 + Y
+	\end{lstlisting}
 \end{instruction}
 
-\todo[inline]{Exemple utilisation de power (var, const, const)  (const, var, const)  etc...
-	+     X is 3 + Y   error
-	}
+\begin{instruction}	
+	Write a \prologcode{power(X, N, Z)} procedure to compute $Z = X^N$. 
+	
+	Try to execute different variations of \prologcode{power}:
+	
+	\begin{lstlisting}[language=prolog]
+	power(7, 4, Z).
+	power(7, N, 2401).
+	power(X, 4, 2401).
+	power(7, 4, 2401).
+	power(7, 4, 1).
+	\end{lstlisting}
+	
+	Do you understand why you obtain the observed behaviour?
+\end{instruction}
 
 \section{Cuts}
 
@@ -115,18 +160,16 @@ solve(A) :- clause(A, B), solve(B).
 	Try to modify the \prologcode{solve/1} predicate into a \prologcode{solve/2} predicate, where the second parameter is used to return a \emph{proof tree} for the goal given in first parameter. For instance:
 	
 	\begin{lstlisting}[language=prolog]
-	?- solve(grandparent(george,alexandra), Proof).
-	Proof = (grandparent(george, alexandra) :- 
-		    (parent(george, maria) :- 
-		        (father(george, maria) :- true)),
-		    (parent(maria, alexandra) :- 
-		        (mother(maria, alexandra) :- true)));
+?- solve(grandparent(george,alexandra), Proof).
+Proof = (grandparent(george, alexandra) :- 
+  (parent(george, maria) :- 
+      (father(george, maria) :- true)),
+  (parent(maria, alexandra) :- 
+      (mother(maria, alexandra) :- true)));
 	\end{lstlisting}
 \end{instruction}
 
-\todo{warning: limited (operators not supported)}
-
-\todo{Meta-interpreteurs plus complexes -> simply logical}
+This meta-interpreter can handle the basics of \prolog but cannot understand special operators, like \prologcode{=} or \prologcode{>}. Try for instance \prologcode{solve(power(7,4,X), Proof)}. It is however possible to write more complex meta-interpreters which handle these special cases. For reference, see for instance section 3.8 on meta-programs in \emph{Simply Logical: Intelligent Reasoning by Example}\footnote{\url{https://www.cs.bris.ac.uk/~flach/SL/SL.pdf}}.
 
 \section{Eight Queens}
 
