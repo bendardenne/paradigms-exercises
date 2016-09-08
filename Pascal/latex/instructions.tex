@@ -39,12 +39,12 @@ It can be safely ignored.
 \begin{instruction}
 	Try to compile and run the following \emph{Hello, World!} program.
 	
-	\begin{minted}{Pascal}
+	\begin{lstlisting}[language=Pascal]
 	program HelloWorld;
 	begin 
 		writeln('Hello, World!');
 	end.
-	\end{minted}
+	\end{lstlisting}
 \end{instruction}
 
 \section{Imperative programs}
@@ -103,7 +103,7 @@ Define an enumeration type \pascalcode{booktype}. A book can be either a \pascal
 
 \end{instruction}
 
-\pascal allows programmers to define heterogeneous data structures called \pascalcode{record}s (think of \C's \mintinline{C}{struct}s) containing multiple fields of different types, including other records or enumerations.
+\pascal allows programmers to define heterogeneous data structures called \pascalcode{record}s (think of \C's structs) containing multiple fields of different types, including other records or enumerations.
 
 \begin{instruction}
 Write a program which defines a \pascalcode{record} for \pascalcode{book}s in a library. Each \pascalcode{book} should have a \emph{title} and an \emph{author} (\pascalcode{string}), a publication date (define an auxiliary \pascalcode{type date}) as well as a \emph{kind} (\pascalcode{booktype}).
@@ -121,39 +121,35 @@ Modify your \pascalcode{book record} to have additional records for novels and c
 	Try to play around with those data structures. What happens if you try to assign a value to the writer field of a novel, or the author field of a comic book? What happens if you read that value?
 	Specifically, try to run the following and understand what is happening:
 	
-	\begin{minted}{pascal}
-	theHobbit.title := 'The Hobbit, or There and Back Again';
-	theHobbit.author := 'J. R. R. Tolkien';
-	theHobbit.ISBN := 9780007525492;
+\begin{lstlisting}[language=Pascal]
+theHobbit.title := 'The Hobbit, or There and Back Again';
+theHobbit.author := 'J. R. R. Tolkien';
+theHobbit.ISBN := 9780007525492;
 
-	luckyLuke.kind := comic;
-	luckyLuke.title := 'Billy the Kid';
-	luckyLuke.writer := 'Goscinny';
-	luckyLuke.artist := 'Morris';
+luckyLuke.kind := comic;
+luckyLuke.title := 'Billy the Kid';
+luckyLuke.writer := 'Goscinny';
+luckyLuke.artist := 'Morris';
 
 
-	{* Tests *}
-	writeln(theHobbit.kind);
-	writeln(theHobbit.author);
-	writeln(theHobbit.writer);
-	writeln(theHobbit.artist);
+{* Tests *}
+writeln(theHobbit.kind);
+writeln(theHobbit.author);
+writeln(theHobbit.writer);
+writeln(theHobbit.artist);
 
-	writeln(luckyLuke.kind);        
-	writeln(luckyLuke.author);
+writeln(luckyLuke.kind);        
+writeln(luckyLuke.author);
 
-	luckyLuke.author := 'Did I break Pascal yet?';
-	writeln(luckyLuke.author);
-	writeln(luckyLuke.writer);
+luckyLuke.author := 'Did I break Pascal yet?';
+writeln(luckyLuke.author);
+writeln(luckyLuke.writer);
 
-	\end{minted}
+\end{lstlisting}
 
 	What does the garbage printed by \pascalcode{theHobbit.artist} correspond to?
 	What happens if you set the ISBN to 31084784824439585 and print the artist field again? 
 \end{instruction}
 
-
-\section{Something else ????}
-
-FIXME 
 \end{document}
 	

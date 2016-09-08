@@ -20,15 +20,15 @@ Every source file in DrRacket should start with an expression of the form \schem
 
 \scheme uses prefix notation. This means that applying a function $f$ to two arguments $x$ and $y$ is written as follows:
 
-\begin{minted}{racket}
+\begin{lstlisting}[language=lisp]
 	(f x y)
-\end{minted}
+\end{lstlisting}
 
 For instance, to compute $2 * (14 + 17)$, you need to write:
 
-\begin{minted}{racket}
+\begin{lstlisting}[language=lisp]
 	(* 2 (+ 14 17))
-\end{minted}
+\end{lstlisting}
 
 This may require a bit of getting used to, but you'll soon get the hang of this, don't worry. After all, it's only syntax.
 
@@ -41,33 +41,33 @@ $$\frac{(134 + 121) * \frac{74}{\sqrt{8}}}{ 97.1 - \frac{exp(7)}{78 * 71} } $$
 
 Even control-flow statements use this prefix notation. For instance, an \verb|if| condition would be written as:
 
-\begin{minted}{racket}
+\begin{lstlisting}[language=lisp]
 (if test-expr true-expr false-expr)
 
 (if (positive? a) "a is positive" "a is negative")
-\end{minted}
+\end{lstlisting}
 
 
 \begin{instruction}
 	
 	Try to re-write the following \pascal piece of code in \scheme :
 	
-	\begin{minted}{pascal}
+	\begin{lstlisting}[language=Pascal]
 	a := -8;
 	
 	if a > 0 then b := 2 * sqrt(a)
 	else b := 7 * sqrt(-a) / -a;
 	
 	writeln(b)
-	\end{minted}
+	\end{lstlisting}
 	
 	To get you started, you can start from the following code skeleton:
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define a -8)
 	(define b ... )
 	(display b)     
-	\end{minted}
+	\end{lstlisting}
 	
 \end{instruction}
 
@@ -78,58 +78,58 @@ Even control-flow statements use this prefix notation. For instance, an \verb|if
 
 \scheme is a dialect of LISP, which stands for \emph{List Processor}. Lists are at the core of all LISP language dialects. They are the main data structure and the language is designed to efficiently manipulate lists in many ways, and to use them to define more complex data structures.
 
-The basic building blocks of \scheme are \emph{atoms}. They can be numbers (\schemecode{1}, \schemecode{1.3}, \schemecode{1/3}, \schemecode{1e3}, \ldots), symbols (\schemecode{'a}, \schemecode{'mysymbol}, \schemecode{'*}, \ldots), characters (\schemecode{#\a}, \schemecode{#\Z}, \schemecode{#\(}, \schemecode{#\space}, \schemecode{#\newline}), booleans (\schemecode{#t} and \schemecode{#f} for true and false), \ldots 
+The basic building blocks of \scheme are \emph{atoms}. They can be numbers (\schemecode{1}, \schemecode{1.3}, \schemecode{1/3}, \schemecode{1e3}, \ldots), symbols (\schemecode{'a}, \schemecode{'mysymbol}, \schemecode{'*}, \ldots), characters (\schemecode{#\a}, \schemecode{#\Z}), booleans (\schemecode{#t} and \schemecode{#f} for true and false), \ldots 
 
 Atoms can be combined together with the \schemecode{cons} function to form a \emph{pair}. This constructor function takes two argument and returns a pair, of which the first item is the first argument and the second item is the second argument. After evaluation, the \scheme interpreter will write a pair \schemecode{(cons 'a  'b)} as:
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 	(a . b)
-\end{minted}
+\end{lstlisting}
 
-Once a pair has been constructed, retrieving its first and second elements again can be done through the infamous \car and \cdr functions. (The names of \car and \cdr are historical since Lisp was originally implemented on the IBM 704 computer in the late 1950s, where \car was used to retrieve the contents address of a register and \cdr was used to retrieve the contents decrement register. As a mnemonic device to remember which one retrieves the first value and which one retrieves the second, just remember that the letter ``a'' precedes the letter ``d'' in the alphabet.)
+Once a pair has been constructed, retrieving its first and second elements again can be done through the infamous car and cdr functions. (The names of car and cdr are historical since Lisp was originally implemented on the IBM 704 computer in the late 1950s, where car was used to retrieve the contents address of a register and cdr was used to retrieve the contents decrement register. As a mnemonic device to remember which one retrieves the first value and which one retrieves the second, just remember that the letter ``a'' precedes the letter ``d'' in the alphabet.)
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 (define mypair (cons 'a  'b))
 (car mypair)	; -> Returns the symbol 'a
 (cdr mypair)	; -> Returns the symbol 'b
-\end{minted}
+\end{lstlisting}
 
-A \emph{list} is a special kind of pair (created with \schemecode{cons}), in which the second element (the \cdr) is either another list or the empty list \schemecode{'()}. For instance, the code below defines a list with one element:
+A \emph{list} is a special kind of pair (created with \schemecode{cons}), in which the second element (the cdr) is either another list or the empty list \schemecode{'()}. For instance, the code below defines a list with one element:
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 (define mylist (cons 'a  '()))
 (list? mylist) 	; -> returns #t, true
-\end{minted}
+\end{lstlisting}
 
 The empty list \schemecode{null} or \schemecode{'()} is also considered as a list:
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 (define mylist (cons 'a  null))
 (list? mylist) 	; -> returns #t, true
-\end{minted}
+\end{lstlisting}
 
 In the definition above you can already see that a list has a recursive definition: a list is a pair where the second element is again a list. The empty list \schemecode{'()} gives us a base case from which to build lists. \scheme provides facilities to build lists straightaway more easily than using multiple \schemecode{cons}. For example, each of the lines below define valid lists:
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 (cons 'a (cons 'b (cons 'c (cons 'd '()))))
 
 '(22 21 23 #f 45 0 'dog  "lists can have heterogeneous elements")
 
 (list 1 2 3 4 "A cat is fine too")
-\end{minted}
+\end{lstlisting}
 
 \textbf{Warning:} Because the \scheme language uses mutable lists but Racket uses immutable lists (we will talk about list mutability in a following session), when using the R5RS standard, Racket will often show lists like this:
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 (list 1 2 3)
 -> (mcons 1 (mcons 2 (mcons 3 '())))
-\end{minted}
+\end{lstlisting}
 
 This is because racket uses \schemecode{mcons} instead of \schemecode{cons} to construct mutable lists. To avoid this problem, always use the \schemecode{display} function to print out lists.
 
 \begin{instruction}
 Try to guess the value of the following expressions. Then verify your answer in Racket, using \schemecode{display} to print your results.
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 	(cons 1 (cons 2 (cons 3 (cons 4 '() ))))
 	(car (cons 1 (cons 2 '())))
 	(car (cdr (list 1 2 3 4)))
@@ -144,14 +144,14 @@ Try to guess the value of the following expressions. Then verify your answer in 
 	(caddr '((1 4 8 7) (1 3 4 2 5) (0 32 (54 4 46))))
 	(caaddr '((1 4 8 7) (1 3 4 2 5) (0 32 (54 4 46))))
 	(cadar '((1 4 8 7) (1 3 4 2 5) (0 32 (54 4 46))))
-\end{minted}
+\end{lstlisting}
 	
 What is the difference between these two objects?
 		
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(cons 'a (cons 'b 'c))
 	(cons 'a (cons 'b (cons 'c '() ))) 	
-	\end{minted}
+	\end{lstlisting}
 			
 \end{instruction}
 
@@ -163,9 +163,9 @@ What is the difference between these two objects?
 
 For now, we will just explore the basic syntax to define functions in \scheme and how many problems in \scheme can be defined elegantly in a recursive way. First look at the following trivial example of a function definition, then try to implement some of the more complex functions listed below.
 
-\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define (cube x) (* x x x))
-\end{minted}
+	\end{lstlisting}
 
 
 
@@ -179,11 +179,11 @@ Write a function \schemecode{sum-cubes} of two integer arguments $a$ and $b$ ($a
 	
 	Hint: $sumCubes(a,b) = a^3 + sumCubes(a+1, b)$
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define (sum-cubes a b) 
 		... 
 		)
-	\end{minted}
+	\end{lstlisting}
 \end{instruction}
 
 
@@ -215,10 +215,10 @@ Hint: Accumulate the result along the way in an additional variable.\\
 
 Compare the performance difference between a non tail-recursive \schemecode{sum-cubes} and the tail-recursive implementation \schemecode{sum-cubes-tail} with:
 
-\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 (time (sum-cubes 0 999999))
 (time (sum-cubes-tail 0 999999))
-\end{minted}
+	\end{lstlisting}
 
 Remark: The \schemecode{time} function is not a \scheme primitive, but a Racket extension, so you will need to change your dialect to \schemecode{#lang racket} for this to run. Notice how \scheme handles big numbers naturally through symbolic representation.
 \end{instruction}
@@ -226,14 +226,14 @@ Remark: The \schemecode{time} function is not a \scheme primitive, but a Racket 
 
 \subsection{Recursion on lists}
 
-Using the \car and \cdr primitives, you can access the head and tail of a list. With this mechanism available, it is easy to recursively scan a list. As always with recursion, you will first need to define a base case: with lists, this is often the case of the empty list \schemecode{'()}. Then, figure out how what should happen when recursing from this base case to the case of a list with one element.
+Using the car and cdr primitives, you can access the head and tail of a list. With this mechanism available, it is easy to recursively scan a list. As always with recursion, you will first need to define a base case: with lists, this is often the case of the empty list \schemecode{'()}. Then, figure out how what should happen when recursing from this base case to the case of a list with one element.
 
 \begin{instruction}	
 	Write a function \schemecode{how-many} which takes a first argument $x$ and a second list argument $l$, and returns the occurrence count of $x$ in $l$. For example:
 	
-	\begin{minted}{racket}
+	\begin{lstlisting}[language=lisp]
 	(how-many 4 '(1 4 5 2 3 4 a b 4 4 c 4))
-	\end{minted}
+	\end{lstlisting}
 	
 	should return 5, because there are 5 occurrences of 4 in this list.
 \end{instruction}
@@ -245,9 +245,9 @@ Using the \car and \cdr primitives, you can access the head and tail of a list. 
 \begin{instruction}	
 	Write a function \schemecode{duplicate} which takes a list and returns the same list where every element has been duplicated. For example:
 	
-	\begin{minted}{racket}
+	\begin{lstlisting}[language=lisp]
 	(duplicate '(Do duck quacks echo?))
-	\end{minted}
+	\end{lstlisting}
 	
 	should return \schemecode{'(Do Do duck duck quacks quacks echo? echo? )}
 \end{instruction}
@@ -256,10 +256,10 @@ Using the \car and \cdr primitives, you can access the head and tail of a list. 
 \begin{instruction}	
 	Re-write your \schemecode{collatz?} function to generate a list of the successive values computed by the process. 
 	
-	\begin{minted}{racket}
+	\begin{lstlisting}[language=lisp]
 	(collatz-list 13)
 	-> '(13 40 20 10 5 16 8 4 2 1)
-	\end{minted}
+	\end{lstlisting}
 \end{instruction}
 
 

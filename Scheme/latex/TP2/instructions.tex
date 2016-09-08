@@ -21,12 +21,12 @@ Like many other functional programming languages, \scheme has first-class functi
 \begin{instruction}
 	Write a \schemecode{(filter p l)} function. This function takes two arguments: the first is a predicate $p$ and the second is a list $l$. It returns the list $l$, in which all the elements for which $p$ is false have been removed. Consider this example:
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
 	(filter positive? mylist)
 	 
 	 -> '(1 2 4 5 7 8)
-\end{minted}
+\end{lstlisting}
 
 \schemecode{positive?} is of course a built-in \scheme predicate which returns \schemecode{#t} if its argument is a positive number. 
 \end{instruction}
@@ -34,18 +34,18 @@ Like many other functional programming languages, \scheme has first-class functi
 \begin{instruction}
 	In the previous session, you wrote a \schemecode{sum-cubes} function which may have looked like the following: 
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define (sum-cubes a b)
 	   (if (> a b)
 	      0
 	      (+ (cube a) (sum-cubes (+ a 1) b))))
-	\end{minted}
+	\end{lstlisting}
 	
 	Rewrite a more generic \schemecode{sum-func} which takes three arguments $f$, $a$ and $b$ and which returns the sum of $f$ applied to all integers in $\{a, a+1, ... b\}$. Uses this function to perform a \schemecode{sum-cubes}, for instance:
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(sum-func cube 0 3)
 	-> 36
-	\end{minted}
+	\end{lstlisting}
 	
 	Finally, define \schemecode{sum-cubes} in terms of this new \schemecode{sum-func}.
 \end{instruction}
@@ -55,10 +55,10 @@ Like many other functional programming languages, \scheme has first-class functi
 
 Sometimes it can be useful to write a small function as argument to another directly in the function call, without \schemecode{define}'ing it entirely. This is where \schemecode{lambda}'s become handy. For instance, to use \schemecode{filter} with a predicate that keeps all items smaller than 5:
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 (filter (lambda (x) (< x 5)) mylist)
 -> (1 2 -3 4 -6 -9)
-\end{minted}
+\end{lstlisting}
 
 The  \schemecode{lambda} expression creates an anonymous function which, to $x$ associates the boolean $x != 5$. 
 
@@ -70,25 +70,25 @@ The  \schemecode{lambda} expression creates an anonymous function which, to $x$ 
 	\begin{enumerate}
 		\item 	Try to guess / understand what each does based on the following examples:
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define mylist '(1 2 -3 4 5 -6 7 8 -9))
 	
 	(map (lambda (x) (+ x 1)) mylist)
 	(apply + mylist)
 	(apply max mylist)
-	\end{minted}
+	\end{lstlisting}
 
 	\item Write a \schemecode{(range a b)} utility function which produces a list of all integers from $a$ to $b$, included. Then use this function to re-implement  \schemecode{sum-cubes} in terms of \schemecode{map} and  \schemecode{apply}.
 
 	\item Write a function which takes a list of lists and returns a list containing the maximum of each list.
-	\begin{minted}{scheme}
-	
-	(define listoflists '((1 2 3 1) (45 1 3 4 5) (4 5 64) 
-		(4 6) (144) (0 4 4) (14 464 4 7 6)))
-	
-	(max-list listoflists)
-	-> '(3 45 64 6 144 4 464)
-	\end{minted}
+
+	\begin{lstlisting}[language=lisp]	
+(define listoflists '((1 2 3 1) (45 1 3 4 5) (4 5 64) 
+	(4 6) (144) (0 4 4) (14 464 4 7 6)))
+
+(max-list listoflists)
+-> '(3 45 64 6 144 4 464)
+	\end{lstlisting}
 	\end{enumerate}
 \end{instruction}
 
@@ -96,21 +96,21 @@ Another common operation we might want to do on list is to \emph{accumulate} the
 
 \begin{instruction}
 	Write an \schemecode{accumulate} function. This function will have the following interface :
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(accumulate init-value function list)
-	\end{minted}	
+	\end{lstlisting}
 	
 	And its value is the application of the two-parameter \schemecode{function} successively on all elements of \schemecode{list}, with the first parameter being the accumulated value so far, starting with \schemecode{init-value}. In other words, \schemecode{(accumulate x0 f '(l1 l2 ... ln))} should return
 	$$ f(l_n, f(l_{n-1}, ... \quad f(l_2, f(l_1, x_0))) $$
 	
 	For instance :
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(accumulate 1 * '(2 3 4))
 	> 24
 	
 	(accumulate 14 + '(2 3 4))
 	> 23
-	\end{minted}	
+	\end{lstlisting}
 	
 	Take care of the parameter order ($f(a,b)$ may not be equal to $f(b,a)$! Respect the order given above).
 	
@@ -132,10 +132,10 @@ As said above, it is possible for a function to return a function (think for exa
 	
 	Use this function with the \schemecode{cube} function to generate a \schemecode{mean-cube} function. Then compute the mean-cube of 4 and 16.
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(mean-cube 4 16)
 	-> 2080
-	\end{minted}
+	\end{lstlisting}
 	
 \end{instruction}
 
@@ -146,14 +146,14 @@ From the syntax, it looks like \schemecode{if} in \scheme is just another functi
 \begin{instruction}
 	Implement a \schemecode{(my-if condition true-expr false-expr)} function in terms of \schemecode{cond}. Try it with the following expressions:
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define x 4)
 	(my-if (positive? x) x (- x))
 	
 	(my-if (positive? x) 
 		(display "positive") 
 		(display "negative"))
-	\end{minted}
+	\end{lstlisting}
 \end{instruction}
 
 What goes on in your \schemecode{my-if} function is that the interpreter first evaluates \emph{all} the parameters passed to the the function. In the first example, this does not matter, because \schemecode{x} and \schemecode{(- x)} simply evaluate to 4 and -4, without any side-effects. But in the second example, both arguments have the side-effect of displaying some text on the output, and their evaluation produces \schemecode{#<void>} (this is an implementation choice in racket. The standard simply specifies that \schemecode{display}, returns ``an unspecified value''). In other words, both the true and false blocks are evaluated upon parameter passing, and the function call actually becomes \schemecode{(my-if #t #<void> #<void>)} and the \schemecode{display} have already printed out their arguments.  

@@ -13,9 +13,10 @@
 \usepackage{fancybox}
 \usepackage{hyperref}
 \usepackage{indentfirst}
-\usepackage{minted}
 \usepackage{xspace}
 \usepackage{todonotes}
+\usepackage{caption}
+\usepackage{listings}
 
 \usepackage{tikz}
 \usetikzlibrary{trees}
@@ -46,9 +47,13 @@
 \lang{C}{C}
 
 % Minted config
-\newmintinline[pascalcode]{pascal}{}
-\newmintinline[schemecode]{scheme}{}
-\newmintinline[prologcode]{prolog}{}
+\newcommand{\pascalcode}[1]{\lstinline[language=Pascal]|#1|}
+\newcommand{\schemecode}[1]{\lstinline[language=lisp]|#1|}
+\newcommand{\prologcode}[1]{\lstinline[language=Prolog]|#1|}
+
+%\newmintinline[pascalcode]{pascal}{}
+%\newmintinline[schemecode]{scheme}{}
+%\newmintinline[prologcode]{prolog}{}
 
 \newcommand{\keyword}[2]{\expandafter\def\csname#2\endcsname
 	{\mintinline{#1}{#2}\xspace}}

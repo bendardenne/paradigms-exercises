@@ -12,24 +12,24 @@
 
 You may have noticed that some \scheme functions are able to take an arbitrary number of arguments. For instance: 
 
-\begin{minted}{scheme}
+\begin{lstlisting}[language=lisp]
 
 (* 1 2 3 4 5 6 7 8 9 10 1.132)
 (+ 9 8 7 4)
 (map * '(1 2 3) '(4 5 6) '(7 8 9) '(10 11 12))
 
-\end{minted}
+\end{lstlisting}
 
 This is a very useful syntax which can be found in modern languages as well: the star operator in Ruby or Python for instance. The way in which a function taking an arbitrary number of arguments can be defined in \scheme is through the dot operator: the parameter name following the dot operator at the end of a function parameter list will be bound to a list of all the arguments passed to the function when it is called. The \schemecode{apply} function which we have already encountered before is the counterpart of the dot operator: it takes a list, unpacks it, and applies the function to all arguments of the list. 
 
 \begin{instruction}
 	Try to implement a \schemecode{my-plus} function which sums up all its arguments. Use the dot operator: 
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define (my-plus . mylist)
 		... )
 	
-	\end{minted}
+	\end{lstlisting}
 	
 	You may want to re-use the \schemecode{accumulate} function you wrote in the previous session.
 \end{instruction}
@@ -39,9 +39,9 @@ This is a very useful syntax which can be found in modern languages as well: the
 
 So far, all the functions that we have written were relatively small. This is common in functional programming. However, as our programs become larger we may sometimes have the need to introduce local variables to store the result of temporary calculations. We thus need a way of declaring variables temporarily in some locally defined scope. This is the purpose of the \schemecode{let} function:
 
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(let ((x 10) (y 5)) (* x y))
-	\end{minted}
+	\end{lstlisting}
 
 The expression above creates a temporary scope containing a binding to the variables \schemecode{x} and \schemecode{y}, and then evaluates \schemecode{(* x y)} with these bindings.
 
@@ -49,10 +49,10 @@ The expression above creates a temporary scope containing a binding to the varia
 	
 	Try to evaluate the following expressions:
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(let ((x 10) (y x)) (* x y))
 	(let* ((x 10) (y x)) (* x y))
-	\end{minted}
+	\end{lstlisting}
 	
 	Can you understand the difference between these two forms? Can you write an expression equivalent to the second expression, using only \schemecode{(let ((x 10)) ...)} and \schemecode{(let ((y x)) ...)}?  
 	
@@ -65,12 +65,12 @@ When trying to resolve a reference, an interpreter has two different possibiliti
 
 \begin{instruction}
 	Consider the following piece of code :
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define x 1)
 	(define (f x) (g 2))
 	(define (g y) (+ x y))
 	(f 5)   
-	\end{minted}
+	\end{lstlisting}
 	
 	Can you try to guess the two possible values of \schemecode{(f 5)} in the case of a statistically and dynamically scoped interpreter? If you run this in the racket R5RS interpreter, can you tell what kind of scoping \scheme uses?
 	
@@ -84,12 +84,12 @@ It is very important to understand the difference and to know which approach the
 	
 	What about 
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(let ((a 5)) 
 		(let ((fun (lambda (x) (max a x))))
 			(let ((a 10) (x 20))
 				(fun 1))))
-	\end{minted}
+	\end{lstlisting}
 	
 	What is the effective binding of \schemecode{x} and \schemecode{a} in \schemecode{fun}?
 	(In case of doubt, add \schemecode{x} statements in the body of the \schemecode{lambda}
@@ -105,10 +105,10 @@ Modern functional languages emphasize the immutability of data: once a data stru
 \begin{instruction} 
 	Think about \schemecode{map} for instance. In \scheme, what happens to \schemecode{mylist} after evaluating these two expressions?
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define mylist (list 1 2 4 2 57 9 .1 3 12 -75))
 	(map (lambda (x) (/ (sqrt x) x)) mylist)
-	\end{minted}
+	\end{lstlisting}
 
 \end{instruction}
 
@@ -117,30 +117,30 @@ But \scheme's list structures are actually mutable. You may have noticed that wh
 \begin{instruction}
 	We will now play around with mutable lists in \scheme (don't forget to use \schemecode{#lang r5rs}).
 
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define mutable (list 1 2 4 2 57 9 .1 3 12 -75))
 
 	(set-car! mutable 20)
 	(set-car! (cdr mutable) 10)
 	
 	(set-cdr! (cdr mutable) '(just changing my cdr))
-	 \end{minted}
+	 \end{lstlisting}
 	 
 	What is the value of \schemecode{mutable} after each of the above expressions?
 	
 	Now evaluate:
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(set-cdr! mutable mutable)
-	 \end{minted}
+	 \end{lstlisting}
 
 	What would the value of this last expression? What would happen if you evaluated \schemecode{mutable}? What is the \schemecode{car}, \schemecode{cadr}, \schemecode{caddr} and \schemecode{cadddr} of \schemecode{mutable}?
 	
 	Now evaluate:
-	\begin{minted}{scheme}	
+	\begin{lstlisting}[language=lisp]	
 	(define immutable '(this list wont change))
 	(set-cdr! mutable immutable)
 	(set-car! (cdddr mutable) 'can)
-	 \end{minted}
+	 \end{lstlisting}
 	 
 	 What is the value of \schemecode{immutable} after each of the above expressions? What happened? 	
 \end{instruction}
@@ -149,12 +149,11 @@ But \scheme's list structures are actually mutable. You may have noticed that wh
 	Write an \schemecode{append! x y} function which appends list \schemecode{y} to \schemecode{x}, changing the actual structure of \schemecode{x} in memory (it is a good \scheme practice to suffix functions which mutate some or all of their inputs with a \schemecode{!}).  
 \end{instruction}
 
-
 \begin{instruction}
 	
 	Consider the following \schemecode{mystery} function. Can you guess what it does without evaluating it? 
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define (mystery x)
 	   (define (loop x y)
 	      (if (null? x)
@@ -163,17 +162,16 @@ But \scheme's list structures are actually mutable. You may have noticed that wh
 	            (set-cdr! x y)
 	            (loop temp x))))
 	   (loop x '()))
-	\end{minted}
+	\end{lstlisting}
 	
 	Assume we have two lists:
 	
-	\begin{minted}{scheme}
+	\begin{lstlisting}[language=lisp]
 	(define v '(a b c d))
 	(define w (mystery v))
-	\end{minted}
+	\end{lstlisting}
 	
 	What does \schemecode{w} look like? What has \schemecode{v} become? Why?
 	
 \end{instruction}
-
 \end{document}

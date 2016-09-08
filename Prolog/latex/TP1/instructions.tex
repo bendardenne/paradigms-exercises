@@ -19,12 +19,12 @@ Logic programming has 3 kinds of statements: \emph{facts}, \emph{rules} and \emp
 
 \prolog must be fed facts, which are statements which we know are true. They will be the basis  of our programs. A fact start with a lowercase and end with a period :
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 prolog_is_simple.
 life_is_beautiful.
 father(george, maria).
 male(george).
-\end{minted}
+\end{lstlisting}
 
 In the third and fourth lines you see that facts can also have arguments: this particular fact tells us about the link between two terms, i.e. George is Maria's father and George is a male. 
 
@@ -59,9 +59,9 @@ In the third and fourth lines you see that facts can also have arguments: this p
 
 The provided \verb|family.pl| file lists facts which define this family tree. In the \prolog shell, you can use
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 	consult("family.pl").
-\end{minted} 
+\end{lstlisting} 
 
 to load these facts into the logic engine.
 
@@ -71,7 +71,7 @@ In \prolog, objects starting with a capital letter are \emph{logical variables}.
 
 \prolog uses pattern matching to define equality. For instance: 
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 ?- X = X.
 true.
 
@@ -83,52 +83,54 @@ true.
 
 ?- father(george,maria) = father(george,howard).
 false
-\end{minted} 
+\end{lstlisting} 
 
 No evaluation is performed on the members, they are simply defined as equals if their structures match. \prolog can also \emph{unify} terms: two terms can be unified if it possible to instantiate their variables in a way that both terms are equal. For example:
 
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 ?- father(X,maria) = father(george, Y).
 X = george,
 Y = maria.
-\end{minted} 
+\end{lstlisting} 
 
-The terms \prologcode{father(X, maria)} \emph{unifies} with \prologcode{father(george, Y)} when \prologcod{X = george} and \prologcode{Y = maria}. Or 
+The terms \prologcode{father(X, maria)} \emph{unifies} with \prologcode{father(george, Y)} when \prologcode{X = george} and \prologcode{Y = maria}. Or 
+ 
+ \todo[inline]{Exercice exemple sur l'unification avec liste infinie (SWI plus intelligent que prolog du livre)}
  
 \section{Queries}
  
 Once you have fed \prolog some facts, you can start asking it some queries. For instance :
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 ?- father(george, maria).
 true.
-\end{minted}
+\end{lstlisting}
 
 The \prologcode{?-} denotes the \prolog shell. Of course, you can do more than just querying facts as they were given explicitly. For instance, you could wish to know is Maria's father:
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 ?- father(Who, maria).
 Who = george.
-\end{minted}
+\end{lstlisting}
 
 In \prolog a comma \prologcode{,} denotes a logical \emph{and} whereas a semi-colon denotes a logical \emph{or}. You can therefore query for all people who are male or are the children of George for instance:
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 ?- male(Who);father(george, Who)
-\end{minted}
+\end{lstlisting}
 
 In this case there are many possible answers: depending on the implementation, you can use the space or tab key to obtain more results and the return key to stop getting results. \prolog has multiple useful built-in predicates to handle these cases, like the \prologcode{findall} and \prolog{forall} predicates. The \prologcode{findall} predicate will return all possible answers as a list. For instance, to get all people who are fathers of someone:
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 ?- findall(Father, father(Father,X), List).
-\end{minted}
+\end{lstlisting}
 
 Whereas \prologcode{forall} does not provide the list of items the satisfy the query, but rather checks whether all provided items can satisfy the given query or not :
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 ?- forall(father(albert,X), mother(maria, X)).
-\end{minted}
+\end{lstlisting}
 
 Will tell you whether all people who have Albert as father, also have Maria as mother.
 
@@ -148,10 +150,10 @@ Will tell you whether all people who have Albert as father, also have Maria as m
 
 A \emph{rule} allows us to use known facts to draw conclusions from our world. For example:
 
-\begin{minted}{prolog}
+\begin{lstlisting}[language=prolog]
 male(george).             % this is a fact
 human(X) :- male(X).      % this is a rule: if X is a male, X is human
-\end{minted}
+\end{lstlisting}
 
 Would allow you to query for \prologcode{?- human(george).} and obtain \prologcode{true}.
 
@@ -177,9 +179,9 @@ Would allow you to query for \prologcode{?- human(george).} and obtain \prologco
 
 The underscore character can be used to in place of variables when we are not interested in their value. This character will basically match anything, but each use will be considered a different variable, so you cannot do for instance:
 
-\begin{minted}{prolog}
-	grandparent (X, Z) :- parent (X, _), parent (_, Z).
-\end{minted}
+\begin{lstlisting}[language=prolog]
+grandparent (X, Z) :- parent (X, _), parent (_, Z).
+\end{lstlisting}
 
 because under the hood, each \prologcode{_} will be bound to a new distinct variable called \prologcode{_1}, \prologcode{_2}, \prologcode{_3} and so on, which means each \prologcode{_} is internally a different variable, like \prologcode{X} and \prologcode{Z} are different variables.
 
@@ -200,5 +202,129 @@ It is possible (and powerful) to write recursive rules: rules which reduce the d
 \begin{instruction}
 	Write a rule to describe the \prologcode{ancestor/2} relationship.
 \end{instruction}
+
+
+
+\section{Lists}
+
+\prolog has a builtin list data structure. They are denoted by square brackets:
+
+\begin{lstlisting}[language=prolog]
+[a,b,c,d]
+\end{lstlisting}
+
+Similar to LISP lists, they are divided in a head (car) and a tail (cdr), which is itself a list. To handle the head and tail of a list of arbitrary size, you can use the bar operator:
+
+\begin{lstlisting}[language=prolog]
+[Head|Tail]
+\end{lstlisting}
+
+As in \scheme, the empty list \prologcode{[]} forms the base case, a list \prologcode{[a,b,c]} can also be written as:
+
+\begin{lstlisting}[language=prolog]
+[a|[b|[c|[]]]]
+\end{lstlisting}
+
+
+
+\begin{instruction}
+Translate the following \scheme statements into a \prolog list:
+
+\begin{lstlisting}[language=lisp]
+	(cons a '())
+	(cons a (cons b (cons c '())))
+	(cons a L)
+	(cons a (cons b (cons c L)))
+\end{lstlisting}
+	
+\end{instruction}
+
+
+\begin{instruction}
+	
+	Write \prolog clauses to:
+	
+	\begin{itemize}
+	\item Determine whether an \prologcode{Element} belongs to a \prologcode{List}
+	\begin{lstlisting}[language=prolog] 
+	member(Element, List) 
+	\end{lstlisting}		
+	
+	\item Append to lists together 
+	\begin{lstlisting}[language=prolog] 
+	my_append(List1, List2, Result) 
+	\end{lstlisting}
+	
+	\item  Obtain the last \prologcode{Element} of a \prologcode{List}
+	\begin{lstlisting}[language=prolog] 
+	last(List, Element) 
+	\end{lstlisting}
+	
+	
+	\item  Shift all elements of a \prologcode{List} to the left
+	\begin{lstlisting}[language=prolog] 
+	shiftleft(List, Result) 
+	\end{lstlisting}
+
+	\item  Shift all elements of a \prologcode{List} to the right
+	\begin{lstlisting}[language=prolog] 
+	shiftright(List, Result) 
+	\end{lstlisting}	
+	
+	\item  Delete all occurences of \prologcode{Element} in a \prologcode{List}
+	\begin{lstlisting}[language=prolog] 
+	my_delete(Element, List, Result) 
+	\end{lstlisting}		
+	\end{itemize}
+	
+\end{instruction}
+
+\begin{instruction}
+	Consider the following clauses:
+	\begin{lstlisting}[language=prolog] 
+	h([],[]).
+	h([X|Y],Z) :- h(Y,L), append(L,[X],Z). 
+	\end{lstlisting}	
+	
+	\begin{enumerate}
+		\item Try to guess the purpose of these clauses.
+		\item Try to manually execute \prologcode{h([1,2,3],L).} and \prologcode{h(L,[1,2,3]).}
+	\end{enumerate}
+	
+\end{instruction}
+
+
+\section{Additional exercise}
+\begin{flushright}
+	\small
+	\itshape
+	This exercise is not mandatory.
+\end{flushright}
+
+
+\begin{instruction}
+	Write clauses to:
+	\begin{enumerate}
+		
+	\item Add an\prologcode{Element} to a \prologcode{List} 
+	\begin{lstlisting}[language=prolog] 
+	insert(Element, List, Result) 
+	\end{lstlisting}
+	
+	\item  Give all permutations of a given \prologcode{List}
+	\begin{lstlisting}[language=prolog] 
+	permutation(List, Permutation) 
+	\end{lstlisting}
+	
+	
+	\item Tell whether a \prologcode{Sublist} is part of a \prologcode{List}
+	\begin{lstlisting}[language=prolog] 
+	sublist(Sublist, List) 
+	\end{lstlisting}
+	
+	\end{enumerate}
+	
+\end{instruction}
+
 
 \end{document}
