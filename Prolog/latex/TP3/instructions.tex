@@ -79,26 +79,12 @@ as --> "a", a.
 It is possible to specify alternatives with \prologcode{;}:
 \begin{lstlisting}[language=prolog]
 article_phrase --> ("a" ; "an"), " ", noun.
-:
+
 noun --> "book"                                                            
 noun --> "car".
 \end{lstlisting}
 
-
-\begin{instruction}
-	We can define a simple grammar for well-formed boolean algebra formulas as the following:
-	
-	\begin{verbatim}
-	<b-expression> ::= <b-term> [OR <b-expression>]*
-	<b-term>       ::= <not-factor> [AND <b-term>]*
-	<not-factor>   ::= [NOT] <b-factor>
-	<b-factor>     ::= <b-literal> | <b-variable> | (<b-expression>)
-	<b-literal>    ::= 0 | 1
-	<b-variable>   ::= <identifier>
-	\end{verbatim}
-	
-	Write DCG rules to accept formulas in this grammar. 
-\end{instruction}
+Try the above grammar in the shell.
 
 \section{Prolog and DCG}
 
@@ -124,11 +110,30 @@ The \prologcode{ \{ ... \} } construct allows you to run a regular \prolog predi
 	But not: 
 	
 	\begin{lstlisting}[language=lisp]
+	(define glob "hello")
 	(define glub 12.345.41)
 	\end{lstlisting}
 	
 	Check with \prologcode{phrase} that your grammar accepts or refuses those sentences.
 \end{instruction}  
+
+
+
+
+\begin{instruction}
+	We can define a simple grammar for well-formed boolean algebra formulas as the following:
+	
+	\begin{verbatim}
+	<b-expression> ::= <b-term> [OR <b-expression>]
+	<b-term>       ::= <not-factor> [AND <b-term>]
+	<not-factor>   ::= [NOT] <b-factor>
+	<b-factor>     ::= <b-literal> | <b-variable> | (<b-expression>)
+	<b-literal>    ::= 0 | 1
+	<b-variable>   ::= <identifier>
+	\end{verbatim}
+	
+	Write DCG rules to accept formulas in this grammar. 
+\end{instruction}
 
 	
 \end{document}
