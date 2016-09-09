@@ -8,4 +8,107 @@
 	
 	\maketitle
 	
-\section{DCG}	
+
+\section{Introduction: strings}	
+
+Before diving in the main aspect of this session (DCG), we must first introduce how strings work in \prolog. As you might guess, strings are represented as lists. Specifically, lists of ASCII codes. But as typing ascii codes by hand can be tedious, \prolog provides double quotes as syntactical sugar to represent such lists. The \prologcode{string_codes} predicate can help you go from one form to the other (see also the documentation for \prologcode{name} and similar conversion predicates):
+
+\begin{lstlisting}[language=prolog]
+?- string_codes("hello", L).
+L = [104, 101, 108, 108, 111].
+
+?- string_codes(S, [119, 111, 114, 108, 100]).
+S = "world".
+\end{lstlisting}
+
+Given a list of codes, you can also use format to print it as a string directly:
+
+\begin{lstlisting}[language=prolog]
+?- A = [104, 101, 108, 108, 111], 
+   B = [119, 111, 114, 108, 100], 
+   format("~s ~s~n", [A, B]).
+\end{lstlisting}
+
+	
+\section{DCG Basics}
+
+This session will explore a feature of \prolog called DCG. Definite Clause Grammars allow you to define a language grammar directly into \prolog, to able to generate or parse sentences from this language. It is merely a layer on top of regular \prolog, and the DCG rules can be directly translated into normal \prolog.
+
+DGC is very similar to BNF. A DCG rule has the form:
+
+\begin{lstlisting}[language=prolog]
+head --> body.
+\end{lstlisting}
+
+and is analogous to a standard \prolog rule for:
+
+\begin{lstlisting}[language=prolog]
+head :- body.
+\end{lstlisting}
+
+The body can contain terminals (a prolog list) or non-terminals (mostly other DCG rules). For instance, to define a language accepting sentences that are series of the letter a:
+
+\begin{lstlisting}[language=prolog]
+as --> [].
+as --> [a], as.
+\end{lstlisting}
+
+\begin{instruction}
+	Use the \prologcode{phrase(as, P)} predicate to generate some examples of sentences from this language and to check whether one particular sentence is part of this language or not.
+	
+	Then modify the toy example to accept sentences made of alternating a's and b's :
+	\begin{lstlisting}[language=prolog]
+	P = [] ;
+	P = [a] ;
+	P = [a, b] ;
+	P = [a, b, a] ;
+	P = [a, b, a, b] ;
+	P = [a, b, a, b, a] ;
+	\end{lstlisting}
+	etc.
+\end{instruction}
+
+A terminal can be a string. 
+\begin{lstlisting}[language=prolog]
+as --> [].
+as --> "a", a.
+
+?- phrase(as2, P),format('~s~n', [P]).
+\end{lstlisting}
+
+
+
+\section{Prolog and DCG}
+
+Using arguments to rules can allow you to capture and manipulate the input string. For instance:
+\begin{lstlisting}[language=prolog]
+digit(D) --> [D], {code_type(D, digit)}.
+\end{lstlisting}
+
+The \prologcode{ \{ ... \} } construct allows you to run a regular \prolog predicate from within a DCG rule. In this case, we use the \prologcode{code_type} predicate to check that \prologcode{D} is a digit (refer to the documentation for more details on \prologcode{code_type}).
+
+\begin{instruction}
+	Write rules to accept simple \scheme expressions to define real constants. It should accept:
+	
+	\begin{lstlisting}[language=lisp]
+	(define foo 12345)
+	(define bar2 3.1415).
+	(define baz 00000145.149800)
+	(define zork .4242)
+	(define blob 4242.)
+	
+	\end{lstlisting}
+	
+	But not: 
+	
+	\begin{lstlisting}[language=lisp]
+	(define glub 12.345.41)
+	\end{lstlisting}
+	
+	Check with \prologcode{phrase} that your grammar accepts or refuses those sentences.
+\end{instruction}  
+
+	
+\end{document}
+	
+	
