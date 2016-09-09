@@ -68,7 +68,7 @@ as --> [a], as.
 	etc.
 \end{instruction}
 
-A terminal can be a string. 
+A terminal can also (and perhaps more usefully) be a string. 
 \begin{lstlisting}[language=prolog]
 as --> [].
 as --> "a", a.
@@ -76,7 +76,29 @@ as --> "a", a.
 ?- phrase(as2, P),format('~s~n', [P]).
 \end{lstlisting}
 
+It is possible to specify alternatives with \prologcode{;}:
+\begin{lstlisting}[language=prolog]
+article_phrase --> ("a" ; "an"), " ", noun.
+:
+noun --> "book"                                                            
+noun --> "car".
+\end{lstlisting}
 
+
+\begin{instruction}
+	We can define a simple grammar for well-formed boolean algebra formulas as the following:
+	
+	\begin{verbatim}
+	<b-expression> ::= <b-term> [OR <b-expression>]*
+	<b-term>       ::= <not-factor> [AND <b-term>]*
+	<not-factor>   ::= [NOT] <b-factor>
+	<b-factor>     ::= <b-literal> | <b-variable> | (<b-expression>)
+	<b-literal>    ::= 0 | 1
+	<b-variable>   ::= <identifier>
+	\end{verbatim}
+	
+	Write DCG rules to accept formulas in this grammar. 
+\end{instruction}
 
 \section{Prolog and DCG}
 
