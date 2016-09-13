@@ -138,7 +138,7 @@ The \prologcode{ \{ ... \} } construct allows you to run a regular \prolog predi
 
 \section{Parse trees}
 
-When parsing a sentence, DCG rules need to figure out the parse tree of this sentence, but this tree it is not given explicitly. However is it easy to obtain this tree from the rules, using arguments to match the parsed structure. Consider for instance from the example from above:
+When parsing a sentence, DCG rules need to figure out the parse tree of this sentence, but this tree it is not given explicitly. However is it easy to obtain this tree from the rules, using arguments to match the parsed structure and build the tree using unification. Consider for instance:
 
 \begin{lstlisting}[language=prolog]
 article_phrase(ap(Det, Noun)) --> det(Det), " ", noun(Noun).
