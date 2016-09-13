@@ -28,38 +28,81 @@ noun --> "car".
 % 2. PROLOG AND DCG %
 %%%%%%%%%%%%%%%%%%%%%
 
-definition --> "(define ", identifier(I),  " ", number(I2), ")", !.
+definition --> "(define ", identifier,  " ", number, ")", !.
 
-number([H|T]) --> digit(H), number(T).
-number([H|T]) --> period(H), (digits(T) ; []).
-number([H]) --> [H].
+number --> digit.
+number --> digit, number.
+number --> period, (digits ; []).
 
-digits([H|T]) --> digit(H), digits(T).
-digits([H]) --> digit(H).
-identifier([H|T]) --> alphanum(H), identifier(T).
-identifier([H]) --> alphanum(H).
-
-
-digit(D) --> [D], {code_type(D, digit)}.
-alphanum(C) --> [C], { code_type(C, alnum)}.
-period(P) --> [P], {char_code(., P)}.
+digits --> digit, digits.
+digits --> digit.
+identifier --> alphanum, identifier.
+identifier --> alphanum.
 
 
-
-%% Boolean formulas
-
-bexp --> bterm, " OR ", bexp.
-bexp --> bterm.
-bexp --> [].
-
-bterm --> notfactor.
-bterm --> notfactor, " AND ", bterm.
-
-notfactor --> bfactor.
-notfactor --> "NOT ", bfactor.
-
-bfactor --> (blit; bvar; "(", bexp, ")"). 
+digit --> [D], {code_type(D, digit)}.
+alphanum --> [C], { code_type(C, alnum)}.
+period --> [P], {char_code(., P)}.
 
 
-blit --> ("0"; "1").
-bvar --> identifier(I).
+
+%% Boolean formulas, without parse tree
+
+%bexp --> bterm, " OR ", bexp.
+%bexp --> bterm.
+%
+%bterm --> notfactor.
+%bterm --> notfactor, " AND ", bterm.
+%
+%notfactor --> bfactor.
+%notfactor --> "NOT ", bfactor.
+%
+%bfactor --> (blit; bvar; "(", bexp, ")"). 
+%
+%
+%blit --> ("0"; "1").
+%bvar --> identifier.
+
+%%%%%%%%%%%%%%%%%%
+% 3. PARSE TREES %
+%%%%%%%%%%%%%%%%%%
+
+%% Boolean formulas with parse tree
+
+letters([A|L]) --> alpha(A), letters(L).
+letters([A]) --> alpha(A).
+alpha(C) --> [C], { code_type(C, alpha)}.
+
+bexp(bexp(Bterm, or, Bexp)) --> bterm(Bterm), " OR ", bexp(Bexp).
+bexp(bexp(Bterm)) --> bterm(Bterm).
+
+bterm(bterm(Notfactor)) --> notfactor(Notfactor).
+bterm(bterm(Notfactor, and, Bterm)) --> notfactor(Notfactor), " AND ", bterm(Bterm).
+
+notfactor(notfactor(Bfactor)) --> bfactor(Bfactor).
+notfactor(not, notfactor(Bfactor)) --> "NOT ", bfactor(Bfactor).
+
+bfactor(bfactor(X)) --> (blit(X); bvar(X); "(", bexp(X), ")"). 
+
+
+blit(blit(0)) --> "0".
+blit(blit(1)) --> "1".
+bvar(bvar(Atom)) --> letters(Identifier), {atom_codes(Atom, Identifier)}.
+
+
+%% Boolean interpreter
+% example:  assert(a), assert(b :- false),  accepts(bexp(F), "a OR b"), eval(F)
+
+eval(bexp(A, or, B)) :- eval(A) ; eval(B).
+eval(bexp(A)) :- eval(A).
+
+eval(bterm(A, and, B)) :- eval(A), eval(B).
+eval(bterm(A)) :- eval(A).
+
+eval(notfactor(not, A)) :- not(eval(A)).
+eval(notfactor(A)) :- eval(A).
+
+eval(bfactor(A)) :- eval(A).
+eval(blit(1)) :- true.
+eval(blit(0)) :- false.
+eval(bvar(A)) :- A.

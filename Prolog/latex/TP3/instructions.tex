@@ -80,7 +80,7 @@ It is possible to specify alternatives with \prologcode{;}:
 \begin{lstlisting}[language=prolog]
 article_phrase --> ("a" ; "an"), " ", noun.
 
-noun --> "book"                                                            
+noun --> "book".                                         
 noun --> "car".
 \end{lstlisting}
 
@@ -135,7 +135,60 @@ The \prologcode{ \{ ... \} } construct allows you to run a regular \prolog predi
 	Write DCG rules to accept formulas in this grammar. 
 \end{instruction}
 
+
+\section{Parse trees}
+
+When parsing a sentence, DCG rules need to figure out the parse tree of this sentence, but this tree it is not given explicitly. However is it easy to obtain this tree from the rules, using arguments to match the parsed structure. Consider for instance from the example from above:
+
+\begin{lstlisting}[language=prolog]
+article_phrase(ap(Det, Noun)) --> det(Det), " ", noun(Noun).
+
+det(det(an))  --> "an".
+det(det(a)) --> "a".
+
+noun(noun(book)) --> "book".                                          
+noun(noun(car)) --> "car".
+\end{lstlisting}
+
+If you parse the sentence "a car" you would obtain: \prologcode{ap(det(a), noun(car))} which would correspond to the tree: 
+
+
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[level 1/.style={sibling distance=2.5cm},level 2/.style={sibling distance=1.5cm}]
+	\node {ap}[edge from parent fork down]
+	child { node  {det}
+		child { node {a}}
+	}
+	child { node {noun}
+		child{node {car}}}
+	;
+	\end{tikzpicture}
+\end{figure}
+
+\begin{instruction}
+Modify your rules for boolean formulas to produce a parse tree.
+\end{instruction}
 	
+
+\section{Interpreting the parse tree}
+
+Once you have a parse tree, you can feed it to an interpreter which will perform whatever actions the parse tree represents. 
+
+\begin{instruction}
+	Write an \prologcode{eval} predicate which evaluates a boolean formula. Boolean variables should be in lowercase and treated as \prolog facts. For instance: 
+	
+	\begin{lstlisting}[language=prolog]
+	?- assert(a).
+	?- assert(b:- false).
+	\end{lstlisting}
+	
+	Should then return true if you evaluate the tree for "a OR b" but obviously false if you evaluate "a AND b".
+	
+	
+\end{instruction}
+
 \end{document}
 	
 	
